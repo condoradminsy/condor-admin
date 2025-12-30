@@ -1,0 +1,158 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { request } from '@/service/request';
+import { useThemeStore } from '@/store/modules/theme';
+const themeStore = useThemeStore();
+const groupRef = ref();
+const activeId = ref(0);
+const groupList = ref<
+  {
+    id: number;
+    name: string;
+    code: string;
+    remark: string;
+  }[]
+>([]);
+const urls = {
+  add: 'core/config-group/add',
+  edit: 'core/config-group/edit',
+  del: 'core/config-group/del',
+  index: 'core/config-group/index'
+};
+const emit = defineEmits<{
+  (e: 'update:active', value: any): void;
+}>();
+const getGroupList = () => {
+  request({
+    url: urls.index,
+    method: 'POST'
+  }).then(({ data, error }) => {
+    if (error) return;
+    groupList.value = data;
+    if (data.length > 0 && !activeId.value) {
+      activeId.value = data[0].id;
+      emit('update:active', data[0]);
+    }
+  });
+};
+getGroupList();
+const groupColumns = [
+  {
+    key: 'name',
+    title: '分组名称',
+    rules: [{ required: true, message: '分组名称不能为空' }]
+  },
+  {
+    key: 'code',
+    title: '分组标识',
+    rules: [{ required: true, message: '分组标识不能为空' }],
+    component: {
+      props: {
+        allowInput: (value: string) => !value || /^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)
+      }
+    }
+  },
+  {
+    key: 'remark',
+    title: '备注'
+  }
+];
+
+const selectGroup = (row: any) => {
+  activeId.value = row.id;
+  emit('update:active', row);
+};
+
+const edit = (row: any) => {
+  groupRef.value.setForm(row, 'id');
+  groupRef.value.open({
+    type: 'edit',
+    title: '编辑分组',
+    row
+  });
+};
+
+const toDel = (id: number) => {
+  request({
+    url: urls.del,
+    method: 'POST',
+    data: {
+      ids: [id]
+    }
+  }).then(({ error }) => {
+    if (!error) {
+      if (activeId.value === id) {
+        activeId.value = 0;
+      }
+      getGroupList();
+    }
+  });
+};
+</script>
+
+<template>
+  <div class="flex items-center justify-between p-2">
+    <div>配置分组</div>
+    <!-- eslint-disable -->
+    <NTooltip style="padding: 5px 8px">
+      <template #trigger>
+        <NButton
+          size="small"
+          circle
+          type="primary"
+          @click="groupRef.open({ type: 'add', title: '添加分组' })"
+        >
+          <icon-material-symbols-add-2
+            :font-size="16"
+          ></icon-material-symbols-add-2>
+        </NButton>
+      </template>
+      <div class="text-xs">添加分组</div>
+    </NTooltip>
+  </div>
+  <div
+    class="flex items-center justify-between border-b py-2 pl-3 pr-2" 
+    :class="{ 'border-t':index === 0 }"
+    v-for="(item, index) in groupList"
+    :key="item.id"
+  >
+    <div
+      class="cursor-pointer py-[2px] px-2 border"
+      :style="{ '--text-color': themeStore.themeColor }"
+      :class="{
+        'rounded-md border-[--text-color]': item.id === activeId,
+        'border-white': item.id !== activeId,
+      }"
+      @click="selectGroup(item)"
+    >
+      <span>{{ item.name }}</span>
+      <span class="text-xs">({{ item.code }})</span>
+    </div>
+    <div class="flex space-x-2">
+      <NButton size="small" text type="primary" @click="edit(item)">
+        <icon-ic-baseline-edit :font-size="14"></icon-ic-baseline-edit>
+      </NButton>
+      <NPopconfirm
+        placement="top"
+        confirm-type="error"
+        @positive-click="toDel(item.id)"
+      >
+        <template #trigger>
+          <NButton size="small" text type="error">
+            <icon-material-symbols-delete-outline
+              :font-size="14"
+            ></icon-material-symbols-delete-outline>
+          </NButton>
+        </template>
+        <div class="text-xs">确认删除分组嘛？</div>
+      </NPopconfirm>
+    </div>
+  </div>
+  <!-- 分组表单 -->
+  <CondorLayerForm
+    ref="groupRef"
+    :columns="groupColumns"
+    :urls="urls"
+    @on-ok="getGroupList"
+  ></CondorLayerForm>
+</template>

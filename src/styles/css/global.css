@@ -1,0 +1,22 @@
+@import './reset.css';
+@import './nprogress.css';
+@import './transition.css';
+
+html,
+body,
+#app {
+  height: 100%;
+  text-autospace: normal;
+}
+
+html {
+  overflow-x: hidden;
+  color: rgb(var(--base-text-color));
+}
+.n-card.n-modal.condor-modal {
+  --n-padding-bottom: 15px !important;
+}
+.n-card.n-modal.condor-modal .n-card__content {
+  max-height: 640px;
+  overflow-y: auto;
+}

@@ -1,0 +1,72 @@
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { request } from '@/service/request';
+const props = withDefaults(
+  defineProps<{
+    value: any;
+    url: string;
+    checkStrategy?: 'all' | 'parent' | 'child';
+    defaultExpandAll?: boolean;
+    multiple?: boolean;
+    checkable?: boolean;
+    cascade?: boolean;
+    placeholder?: any;
+    labelField?: string;
+    keyField?: string;
+    param?: any;
+  }>(),
+  {
+    checkStrategy: 'all',
+    defaultExpandAll: true,
+    multiple: false,
+    checkable: false,
+    cascade: false,
+    placeholder: '请选择',
+    labelField: 'name',
+    keyField: 'id',
+    param: () => ({})
+  }
+);
+const treeList = ref([]);
+const emit = defineEmits<{
+  (e: 'update:value', value: any): void;
+}>();
+const value = computed({
+  get() {
+    return props.value;
+  },
+  set(val) {
+    emit('update:value', val);
+  }
+});
+const getData = () => {
+  request({
+    url: props.url,
+    method: 'post',
+    data: {
+      ...props.param
+    }
+  }).then(({ error, data }) => {
+    if (!error) {
+      treeList.value = data.list || data || [];
+    }
+  });
+};
+getData();
+</script>
+
+<template>
+  <NTreeSelect
+    v-model:value="value"
+    clearable
+    :check-strategy="props.checkStrategy"
+    :default-expand-all="props.defaultExpandAll"
+    :multiple="props.multiple"
+    :options="treeList"
+    :checkable="props.checkable"
+    :cascade="props.cascade"
+    :placeholder="props.placeholder"
+    :key-field="props.keyField"
+    :label-field="props.labelField"
+  ></NTreeSelect>
+</template>
