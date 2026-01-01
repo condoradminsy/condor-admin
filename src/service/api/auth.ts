@@ -54,3 +54,16 @@ export function fetchRefreshToken(refreshToken: string) {
 export function fetchCustomBackendError(code: string, msg: string) {
   return request({ url: '/auth/error', params: { code, msg } });
 }
+
+// 上传文件
+export function fetchUpload(data: FormData) {
+  return request({
+    url: '/core/attachment/upload',
+    method: 'post',
+    data,
+    headers: {
+      Accept: '*/*',
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}

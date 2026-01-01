@@ -175,7 +175,7 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
                           type: 'error',
                           size: 'small'
                         },
-                        { icon: () => h(Icon, { icon: 'material-symbols-delete-outline', width: 16 }) }
+                        { icon: () => h(Icon, { icon: 'material-symbols:delete-outline', width: 16 }) }
                       )
                   }
                 ),

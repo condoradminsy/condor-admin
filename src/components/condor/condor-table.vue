@@ -301,6 +301,7 @@ defineExpose({
                 <span>确定删除所选数据吗？</span>
               </NPopconfirm>
             </CondorAuth>
+            <CondorVNode v-else-if="typeof item === 'function'" :render="item"></CondorVNode>
           </template>
         </div>
       </slot>
@@ -418,6 +419,7 @@ defineExpose({
               </template>
               <span>搜索</span>
             </NTooltip>
+            <CondorVNode v-else-if="typeof item === 'function'" :render="item"></CondorVNode>
           </template>
         </div>
       </slot>

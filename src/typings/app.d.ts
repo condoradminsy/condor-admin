@@ -526,7 +526,6 @@ declare namespace App {
           };
         };
         home: {
-          branchDesc: string;
           greeting: string;
           weatherDesc: string;
           projectCount: string;
@@ -542,16 +541,6 @@ declare namespace App {
           visitCount: string;
           turnover: string;
           dealCount: string;
-          projectNews: {
-            title: string;
-            moreNews: string;
-            desc1: string;
-            desc2: string;
-            desc3: string;
-            desc4: string;
-            desc5: string;
-          };
-          creativity: string;
         };
       };
       form: {
