@@ -248,6 +248,13 @@ const fields = computed(() => {
             }
           }
         };
+      case 'editor':
+        return {
+          ...item,
+          component: {
+            name: 'condor-editor'
+          }
+        };
       default:
         return item;
     }
@@ -311,11 +318,11 @@ const resetForm = () => {
 
 <template>
   <div>
-    <NGrid cols="1 700:3" :x-gap="12" class="rounded-md bg-white px-3">
-      <NGridItem :span="1" class="my-3 border rounded-md">
+    <NGrid cols="1 700:7" :x-gap="12" class="rounded-md bg-white px-3">
+      <NGridItem :span="2" class="my-3 border rounded-md">
         <ConfigGroup @update:active="updateGroup" />
       </NGridItem>
-      <NGridItem :span="2" class="my-3 border rounded-md">
+      <NGridItem :span="5" class="my-3 border rounded-md">
         <div class="flex items-center justify-between border-b border-[#e0e0e0] px-3 py-2">
           <div>{{ group.name || '' }}</div>
           <NButton size="small" type="primary" @click="addConfig">

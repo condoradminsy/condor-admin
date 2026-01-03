@@ -4,6 +4,9 @@ import { NInput } from 'naive-ui';
 import { transformColorWithOpacity } from '@sa/color';
 import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
+defineOptions({
+  name: 'CondorAttachmentType'
+});
 const themeStore = useThemeStore();
 const bgColor = transformColorWithOpacity(themeStore.themeColor, 0.1);
 const props = withDefaults(

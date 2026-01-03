@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useDictStore } from '@/store/modules/dict';
-
+defineOptions({
+  name: 'CondorDictCheckbox'
+});
 const dictStore = useDictStore();
 
 const props = withDefaults(

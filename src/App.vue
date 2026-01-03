@@ -6,16 +6,15 @@ import { useAppStore } from './store/modules/app';
 import { useDictStore } from './store/modules/dict';
 import { useThemeStore } from './store/modules/theme';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
-
+import { useSse } from './utils/sse';
 defineOptions({
   name: 'App'
 });
+useDictStore();
 
 const appStore = useAppStore();
 const themeStore = useThemeStore();
-const dictStore = useDictStore();
 const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
-dictStore.init();
 const naiveLocale = computed(() => {
   return naiveLocales[appStore.locale];
 });
@@ -39,6 +38,9 @@ const watermarkProps = computed<WatermarkProps>(() => {
     zIndex: 9999
   };
 });
+// 初始化SSE
+const { start } = useSse();
+start();
 </script>
 
 <template>

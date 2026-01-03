@@ -17,8 +17,9 @@ export const useDictStore = defineStore(SetupStoreId.Dict, () => {
     });
   }
 
+  init();
+
   return {
-    dictData,
-    init
+    dictData
   };
 });

@@ -1,7 +1,10 @@
 import { useAuthStore } from '@/store/modules/auth';
 import { localStg } from '@/utils/storage';
+import { getServiceBaseURL } from '@/utils/service';
 import { fetchRefreshToken } from '../api';
 import type { RequestInstanceState } from './type';
+const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
+const { baseURL, otherBaseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
 export function getAuthorization() {
   const token = localStg.get('token');
@@ -61,4 +64,11 @@ export function showErrorMsg(state: RequestInstanceState, message: string) {
       }
     });
   }
+}
+
+export function getBaseUrl() {
+  return {
+    baseURL,
+    otherBaseURL
+  };
 }

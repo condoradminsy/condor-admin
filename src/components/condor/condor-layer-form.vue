@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useForm } from '@/hooks/condor/form';
+defineOptions({
+  name: 'CondorLayerForm'
+});
 const props = withDefaults(
   defineProps<{
     isDraggable?: boolean;

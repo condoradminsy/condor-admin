@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+defineOptions({
+  name: 'CondorSearch'
+});
 interface Props {
   labelPlacement?: 'left' | 'top';
   cols?: number | Record<Condor.Grid.BreakPoint, number>;

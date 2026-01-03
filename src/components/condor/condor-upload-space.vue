@@ -2,10 +2,12 @@
 import { h, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
+import { getBaseUrl } from '@/service/request/shared';
 import { useDictStore } from '@/store/modules/dict';
-import { getServiceBaseURL } from '@/utils/service';
-const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
-const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+defineOptions({
+  name: 'CondorUploadSpace'
+});
+const { baseURL } = getBaseUrl();
 const dictStore = useDictStore();
 const modalRef = ref();
 const imageList = ref<any>([]);

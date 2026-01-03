@@ -2,6 +2,9 @@
 import { nextTick, onMounted, ref } from 'vue';
 import { transformColorWithOpacity } from '@sa/color';
 import { useThemeStore } from '@/store/modules/theme';
+defineOptions({
+  name: 'CondorNav'
+});
 const props = defineProps<{
   list: { label: string; value: string | number | boolean }[];
   index?: number;

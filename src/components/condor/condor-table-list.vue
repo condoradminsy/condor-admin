@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+defineOptions({
+  name: 'CondorTableList'
+});
 const props = withDefaults(
   defineProps<{
     columns: any;

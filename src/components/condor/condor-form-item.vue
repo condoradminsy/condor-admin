@@ -28,6 +28,10 @@ import CondorDictRadio from '@/components/condor/condor-dict-radio.vue';
 import CondorDictSelect from '@/components/condor/condor-dict-select.vue';
 import CondroDictCheckbox from '@/components/condor/condor-dict-checkbox.vue';
 import CondorUpload from '@/components/condor/condor-upload.vue';
+import condorEditor from '@/components/condor/condor-editor.vue';
+defineOptions({
+  name: 'CondorFormItem'
+});
 const props = defineProps<{
   column: Condor.Search.Column;
   value: any;
@@ -67,7 +71,8 @@ const componentMapping: any = {
   'condor-dict-radio': CondorDictRadio,
   'condor-dict-select': CondorDictSelect,
   'condor-dict-checkbox': CondroDictCheckbox,
-  'condor-upload': CondorUpload
+  'condor-upload': CondorUpload,
+  'condor-editor': condorEditor
 };
 // 组件属性
 const componentProps = computed(() => {

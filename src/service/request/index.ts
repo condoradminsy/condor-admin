@@ -2,13 +2,10 @@ import type { AxiosResponse } from 'axios';
 import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
 import { localStg } from '@/utils/storage';
-import { getServiceBaseURL } from '@/utils/service';
 import { $t } from '@/locales';
-import { getAuthorization, handleExpiredRequest, showErrorMsg } from './shared';
+import { getAuthorization, getBaseUrl, handleExpiredRequest, showErrorMsg } from './shared';
 import type { RequestInstanceState } from './type';
-
-const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
-const { baseURL, otherBaseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+const { baseURL, otherBaseURL } = getBaseUrl();
 
 export const request = createFlatRequest(
   {

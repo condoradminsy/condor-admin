@@ -2,6 +2,9 @@
 import { computed, h, ref } from 'vue';
 import { NTag } from 'naive-ui';
 import { request } from '@/service/request';
+defineOptions({
+  name: 'CondorSelect'
+});
 const props = withDefaults(
   defineProps<{
     value: any;

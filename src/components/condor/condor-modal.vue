@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-
+defineOptions({
+  name: 'CondorModal'
+});
 const props = withDefaults(
   defineProps<{
     title?: string;

@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useAuthStore } from '@/store/modules/auth';
+defineOptions({
+  name: 'CondorAuth'
+});
 const authStore = useAuthStore();
 const props = defineProps<{
   permission: string | string[] | undefined;

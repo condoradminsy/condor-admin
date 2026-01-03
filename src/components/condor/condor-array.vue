@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
+defineOptions({
+  name: 'CondorArray'
+});
 const props = withDefaults(
   defineProps<{
     value: any;

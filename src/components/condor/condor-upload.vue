@@ -3,12 +3,14 @@ import { h, ref, watch } from 'vue';
 import type { UploadCustomRequestOptions, UploadFileInfo } from 'naive-ui';
 import { transformColorWithOpacity } from '@sa/color';
 import { fetchUpload } from '@/service/api';
+import { getBaseUrl } from '@/service/request/shared';
 import { useThemeStore } from '@/store/modules/theme';
-import { getServiceBaseURL } from '@/utils/service';
+defineOptions({
+  name: 'CondorUpload'
+});
 const themeStore = useThemeStore();
 const bgColor = transformColorWithOpacity(themeStore.themeColor, 0.1);
-const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
-const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+const { baseURL } = getBaseUrl();
 const spaceRef = ref();
 const props = withDefaults(
   defineProps<{

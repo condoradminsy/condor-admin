@@ -13,6 +13,9 @@ import {
   useSlots,
   watch
 } from 'vue';
+defineOptions({
+  name: 'CondorGrid'
+});
 interface Props {
   cols?: number | Record<Condor.Grid.BreakPoint, number>;
   collapsed?: boolean;

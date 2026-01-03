@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { request } from '@/service/request';
+defineOptions({
+  name: 'CondorTreeCheck'
+});
 const props = withDefaults(
   defineProps<{
     value: any;

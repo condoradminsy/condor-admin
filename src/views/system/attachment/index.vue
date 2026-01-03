@@ -3,10 +3,9 @@ import { computed, h, provide, ref } from 'vue';
 import { NButton, NImage } from 'naive-ui';
 import { Icon } from '@iconify/vue';
 import { fetchUpload } from '@/service/api';
+import { getBaseUrl } from '@/service/request/shared';
 import { useDictStore } from '@/store/modules/dict';
-import { getServiceBaseURL } from '@/utils/service';
-const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
-const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+const { baseURL } = getBaseUrl();
 const dictStore = useDictStore();
 const header = computed<Condor.Table.Header>(() => {
   return {

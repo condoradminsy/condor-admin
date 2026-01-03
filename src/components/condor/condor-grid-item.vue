@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { Ref } from 'vue';
 import { computed, inject, ref, useAttrs, watch } from 'vue';
+defineOptions({
+  name: 'CondorGridItem'
+});
 interface Props {
   offset?: number;
   span?: number;
