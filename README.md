@@ -31,7 +31,7 @@
 
 ## 文档
 
-- [文档地址](https://docs.weidm.top)
+- [文档地址](https://condor.docs.weidm.top)
 
 
 ## 合作事项

@@ -27,6 +27,7 @@ import CondorTreeSelect from '@/components/condor/condor-tree-select.vue';
 import CondorDictRadio from '@/components/condor/condor-dict-radio.vue';
 import CondorDictSelect from '@/components/condor/condor-dict-select.vue';
 import CondroDictCheckbox from '@/components/condor/condor-dict-checkbox.vue';
+import CondorUpload from '@/components/condor/condor-upload.vue';
 const props = defineProps<{
   column: Condor.Search.Column;
   value: any;
@@ -65,7 +66,8 @@ const componentMapping: any = {
   'condor-tree-select': CondorTreeSelect,
   'condor-dict-radio': CondorDictRadio,
   'condor-dict-select': CondorDictSelect,
-  'condor-dict-checkbox': CondroDictCheckbox
+  'condor-dict-checkbox': CondroDictCheckbox,
+  'condor-upload': CondorUpload
 };
 // 组件属性
 const componentProps = computed(() => {

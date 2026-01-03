@@ -1,25 +1,19 @@
 <script setup lang="ts">
-import { h, provide, ref } from 'vue';
+import { computed, h, provide, ref } from 'vue';
 import { NButton, NImage } from 'naive-ui';
 import { Icon } from '@iconify/vue';
 import { fetchUpload } from '@/service/api';
-import AttachmentType from './modules/attachment-type.vue';
-const header = ref<Condor.Table.Header>({
-  params: [
-    { label: '全部', value: 'all' },
-    { label: '图片', value: 'image' },
-    { label: '视频', value: 'video' },
-    { label: '音频', value: 'audio' },
-    { label: '文本', value: 'text' },
-    { label: '文档', value: 'document' },
-    { label: 'Excel', value: 'excel' },
-    { label: 'PPT', value: 'ppt' },
-    { label: 'PDF', value: 'pdf' },
-    { label: '压缩包', value: 'zip' },
-    { label: '其他', value: 'other' }
-  ],
-  index: 0,
-  searchField: 'a.type'
+import { useDictStore } from '@/store/modules/dict';
+import { getServiceBaseURL } from '@/utils/service';
+const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
+const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+const dictStore = useDictStore();
+const header = computed<Condor.Table.Header>(() => {
+  return {
+    params: dictStore.dictData.attachment_type,
+    index: 0,
+    searchField: 'a.type'
+  };
 });
 const type_id = ref(0);
 const tableRef = ref();
@@ -66,35 +60,26 @@ const config = ref<Condor.Table.Config>({
         switch (row.type) {
           case 'image':
             return h(NImage, {
-              width: 50,
-              height: 50,
-              src: `http://127.0.0.1:5566${row.url}`
+              width: '50px',
+              height: '50px',
+              objectFit: 'contain',
+              src: row.url.startsWith('http') ? row.url : `${baseURL}${row.url}`
             });
-          case 'video':
+          default:
             return h(
               'a',
               {
                 class: 'flex justify-center items-center cursor-pointer',
-                href: `http://127.0.0.1:5566${row.url}`,
+                href: row.url.startsWith('http') ? row.url : `${baseURL}${row.url}`,
                 target: '_blank'
               },
               {
                 default: () => [
                   h(Icon, {
                     icon: typeMap[row.type],
-                    class: 'text-xl'
+                    class: 'text-3xl'
                   })
                 ]
-              }
-            );
-          default:
-            return h(
-              'a',
-              {
-                href: `http://127.0.0.1:5566${row.url}`
-              },
-              {
-                default: () => row.filename
               }
             );
         }
@@ -107,7 +92,10 @@ const config = ref<Condor.Table.Config>({
     {
       key: 'filename',
       title: '文件名',
-      width: 290
+      width: 150,
+      ellipsis: {
+        tooltip: true
+      }
     },
     {
       key: 'filesize',
@@ -126,12 +114,17 @@ const config = ref<Condor.Table.Config>({
     {
       key: 'mimetype',
       title: 'mime类型',
-      operator: false
+      operator: false,
+      ellipsis: {
+        tooltip: true
+      },
+      width: 150
     },
     {
       key: 'createtime',
       title: '创建时间',
-      form: false
+      form: false,
+      width: 180
     },
     {
       type: 'operate',
@@ -193,7 +186,7 @@ provide('onBeforeTableIndex', (params: any) => {
   <div>
     <NGrid cols="1 1080:5" :x-gap="12">
       <NGridItem :span="1">
-        <AttachmentType :value="type_id" @update:value="selectType" />
+        <CondorAttachmentType :value="type_id" @update:value="selectType" />
       </NGridItem>
       <NGridItem :span="4" class="rounded-md">
         <CondorTable ref="tableRef" :header="header" :config="config" :buttons="buttons" />

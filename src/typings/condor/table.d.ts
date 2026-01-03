@@ -18,7 +18,7 @@ declare namespace Condor {
       sorter?: boolean | 'default';
       sortOrder?: false | 'ascend' | 'descend';
       resizable?: boolean;
-      ellipsis?: boolean;
+      ellipsis?: boolean | { showTitle?: boolean; tooltip?: boolean };
       type?: 'selection' | 'expand' | 'operate';
       render?: (row: any) => any;
       // 自定义属性

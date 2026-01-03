@@ -230,6 +230,24 @@ const fields = computed(() => {
             name: 'condor-array'
           }
         };
+      case 'image':
+        return {
+          ...item,
+          component: {
+            name: 'condor-upload'
+          }
+        };
+      case 'images':
+        return {
+          ...item,
+          component: {
+            name: 'condor-upload',
+            props: {
+              multiple: true,
+              max: 9
+            }
+          }
+        };
       default:
         return item;
     }
