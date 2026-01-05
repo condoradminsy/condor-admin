@@ -235,7 +235,8 @@ const local: App.I18n.Schema = {
     'system_dict-type': 'Dict Type',
     system_menu: 'Menu',
     system_role: 'Role',
-    system_attachment: 'Attachment'
+    system_attachment: 'Attachment',
+    system_crontab: 'Crontab'
   },
   page: {
     login: {

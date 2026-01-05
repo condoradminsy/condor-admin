@@ -27,11 +27,22 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'name',
-      title: '名称',
+      title: '名称标识',
       operator: 'like',
       component: {
         props: {
           allowInput: (value: string) => !value || /^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)
+        }
+      }
+    },
+    {
+      key: 'scope',
+      title: '可见范围',
+      component: {
+        name: 'condor-dict-radio',
+        props: {
+          code: 'dict_scope',
+          type: 'number'
         }
       }
     },

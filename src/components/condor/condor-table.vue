@@ -477,7 +477,7 @@ defineExpose({
                 :label="item.title"
                 :path="item.key"
               >
-                <slot :name="`form-${item.key}`">
+                <slot :name="`form-item-${item.key}`" :form="form">
                   <div class="w-full">
                     <CondorFormItem
                       v-model:value="form[item.key]"

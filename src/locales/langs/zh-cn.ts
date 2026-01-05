@@ -231,7 +231,8 @@ const local: App.I18n.Schema = {
     'system_dict-type': '字典类型',
     system_menu: '菜单管理',
     system_role: '角色管理',
-    system_attachment: '附件管理'
+    system_attachment: '附件管理',
+    system_crontab: '定时任务'
   },
   page: {
     login: {

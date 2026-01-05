@@ -110,6 +110,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_crontab',
+        path: '/system/crontab',
+        component: 'view.system_crontab',
+        meta: {
+          title: 'system_crontab',
+          i18nKey: 'route.system_crontab'
+        }
+      },
+      {
         name: 'system_dict-type',
         path: '/system/dict-type',
         component: 'view.system_dict-type',

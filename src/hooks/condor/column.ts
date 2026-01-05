@@ -35,6 +35,20 @@ export const useColumns = (columns: any) => {
       }
     };
   };
+
+  // 下拉组件
+  const handleSelectComponent = (item: any, component: any) => {
+    return {
+      ...item,
+      value: item.search?.value ?? null,
+      component: {
+        name: 'condor-dict-select',
+        props: {
+          ...(component.props ?? {})
+        }
+      }
+    };
+  };
   // 清除组件属性
   const cleanComponentProps = (props: any) => {
     const cleanedProps = { ...props };
@@ -59,6 +73,8 @@ export const useColumns = (columns: any) => {
             return handleSwitchComponent(item, component);
           } else if (component?.name === 'n-date-picker' || item.key.endsWith('time')) {
             return handleDateComponent(item);
+          } else if (['condor-dict-radio', 'condor-dict-checkbox'].includes(component?.name)) {
+            return handleSelectComponent(item, component);
           }
         }
         return {
