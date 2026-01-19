@@ -6,8 +6,8 @@ defineOptions({
 });
 const props = withDefaults(
   defineProps<{
-    value: any;
-    header?: any;
+    value: any[];
+    header?: boolean;
     keys?: string[];
     labels?: string[];
   }>(),

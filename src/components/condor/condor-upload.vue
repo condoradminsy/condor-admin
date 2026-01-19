@@ -9,7 +9,8 @@ defineOptions({
   name: 'CondorUpload'
 });
 const themeStore = useThemeStore();
-const bgColor = transformColorWithOpacity(themeStore.themeColor, 0.1);
+const bgColor1 = transformColorWithOpacity(themeStore.themeColor, 0.1);
+const bgColor2 = transformColorWithOpacity('#000000', 0.6);
 const { baseURL } = getBaseUrl();
 const spaceRef = ref();
 const props = withDefaults(
@@ -97,10 +98,14 @@ const onRemove = ({ index }: { index: number }) => {
 };
 
 const onSelect = (list: string[]) => {
-  fileList.value = [...fileList.value, ...list];
+  if (props.max - fileList.value.length <= 0) {
+    return;
+  }
+  const newList = list.slice(0, props.max - fileList.value.length);
+  fileList.value = [...fileList.value, ...newList];
   uploadFileList.value = [
     ...uploadFileList.value,
-    ...list.map(item => {
+    ...newList.map(item => {
       return {
         name: item,
         status: 'finished' as any,
@@ -139,7 +144,10 @@ const renderIcon = () => {
       <div class="parent relative h-full w-full">
         <div
           class="select-btn absolute left-0 top-0 hidden h-[32%] w-full parent-hover:block"
-          :style="{ '--bg-select-coloe': bgColor, '--select-color': themeStore.themeColor }"
+          :style="{
+            '--bg-select-coloe': themeStore.darkMode ? bgColor2 : bgColor1,
+            '--select-color': themeStore.themeColor
+          }"
           @click.stop="spaceRef.open()"
         >
           <div class="h-full w-full flex items-center justify-center text-xs">选择</div>
@@ -147,7 +155,7 @@ const renderIcon = () => {
         <div class="h-full w-full flex items-center justify-center">上传</div>
       </div>
     </NUpload>
-    <CondorUploadSpace ref="spaceRef" @on-select="onSelect"></CondorUploadSpace>
+    <CondorUploadSpace ref="spaceRef" :max="props.max" @on-select="onSelect"></CondorUploadSpace>
   </div>
 </template>
 

@@ -11,7 +11,7 @@ declare namespace Condor {
       index?: number;
     }
     interface Columns {
-      title?: string | ((row: any) => string);
+      title?: string | ((row?: any) => string);
       key: string;
       width?: number;
       align?: 'left' | 'center' | 'right';

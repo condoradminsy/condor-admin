@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { request } from '@/service/request';
+import { useThemeStore } from '@/store/modules/theme';
 import ConfigGroup from './modules/config-group.vue';
+
+const themeStore = useThemeStore();
 const group = ref<{
   id: number;
   name: string;
@@ -318,12 +321,12 @@ const resetForm = () => {
 
 <template>
   <div>
-    <NGrid cols="1 700:7" :x-gap="12" class="rounded-md bg-white px-3">
-      <NGridItem :span="2" class="my-3 border rounded-md">
+    <NGrid cols="1 700:7" :x-gap="12" class="rounded-md bg-white px-3 dark:bg-black">
+      <NGridItem :span="2" class="my-3 border rounded-md dark:border-[#333]">
         <ConfigGroup @update:active="updateGroup" />
       </NGridItem>
-      <NGridItem :span="5" class="my-3 border rounded-md">
-        <div class="flex items-center justify-between border-b border-[#e0e0e0] px-3 py-2">
+      <NGridItem :span="5" class="my-3 border rounded-md dark:border-[#303133]">
+        <div class="flex items-center justify-between border-b border-[#e0e0e0] px-3 py-2 dark:border-[#303133]">
           <div>{{ group.name || '' }}</div>
           <NButton size="small" type="primary" @click="addConfig">
             <icon-material-symbols-add-2 :font-size="16"></icon-material-symbols-add-2>
@@ -331,7 +334,12 @@ const resetForm = () => {
           </NButton>
         </div>
         <NForm ref="formRef" label-placement="left" label-width="100px" :model="forms">
-          <div v-for="(item, index) in fields" :key="index" class="config-form-item px-2 pt-2">
+          <div
+            v-for="(item, index) in fields"
+            :key="index"
+            class="config-form-item px-2 pt-2"
+            :class="{ 'is-dark': themeStore.darkMode }"
+          >
             <NFormItem :label="item.title" class="">
               <div class="w-full flex items-start justify-between">
                 <div class="flex-1 pr-4">
@@ -368,6 +376,11 @@ const resetForm = () => {
 .config-form-item {
   &:nth-child(2n + 1) {
     background-color: #f7fafc;
+  }
+  &.is-dark {
+    &:nth-child(2n + 1) {
+      background-color: #0b0f18;
+    }
   }
 }
 </style>

@@ -7,6 +7,14 @@ import { useDictStore } from '@/store/modules/dict';
 defineOptions({
   name: 'CondorUploadSpace'
 });
+const props = withDefaults(
+  defineProps<{
+    max?: number;
+  }>(),
+  {
+    max: 1
+  }
+);
 const { baseURL } = getBaseUrl();
 const dictStore = useDictStore();
 const modalRef = ref();
@@ -84,6 +92,9 @@ const selectImage = (url: string) => {
   if (index > -1) {
     values.value.splice(index, 1);
   } else {
+    if (values.value.length >= props.max) {
+      return;
+    }
     values.value.push(url);
   }
 };

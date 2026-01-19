@@ -80,7 +80,7 @@ const findIndex = () => {
   const suffix: any = null;
   slots.forEach((slot: any) => {
     // eslint-disable-next-line no-underscore-dangle
-    if (typeof slot.type === 'object' && slot.type.__name === 'dx-grid-item') {
+    if (typeof slot.type === 'object' && slot.type.__name === 'condor-grid-item') {
       if (slot.props?.suffix === undefined) {
         fields.push(slot);
       } else {

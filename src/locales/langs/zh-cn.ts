@@ -232,7 +232,11 @@ const local: App.I18n.Schema = {
     system_menu: '菜单管理',
     system_role: '角色管理',
     system_attachment: '附件管理',
-    system_crontab: '定时任务'
+    system_crontab: '定时任务',
+    system_crud: 'CRUD生成',
+    system_test: '测试页面',
+    'system_admin-log': '操作日志',
+    'system_login-log': '登录日志'
   },
   page: {
     login: {

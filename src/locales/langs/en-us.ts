@@ -236,7 +236,11 @@ const local: App.I18n.Schema = {
     system_menu: 'Menu',
     system_role: 'Role',
     system_attachment: 'Attachment',
-    system_crontab: 'Crontab'
+    system_crontab: 'Crontab',
+    system_crud: 'Crud',
+    system_test: 'Test',
+    'system_admin-log': 'Admin Log',
+    'system_login-log': 'Login Log'
   },
   page: {
     login: {

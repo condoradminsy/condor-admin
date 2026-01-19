@@ -92,6 +92,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_admin-log',
+        path: '/system/admin-log',
+        component: 'view.system_admin-log',
+        meta: {
+          title: 'system_admin-log',
+          i18nKey: 'route.system_admin-log'
+        }
+      },
+      {
         name: 'system_attachment',
         path: '/system/attachment',
         component: 'view.system_attachment',
@@ -119,12 +128,30 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_crud',
+        path: '/system/crud',
+        component: 'view.system_crud',
+        meta: {
+          title: 'system_crud',
+          i18nKey: 'route.system_crud'
+        }
+      },
+      {
         name: 'system_dict-type',
         path: '/system/dict-type',
         component: 'view.system_dict-type',
         meta: {
           title: 'system_dict-type',
           i18nKey: 'route.system_dict-type'
+        }
+      },
+      {
+        name: 'system_login-log',
+        path: '/system/login-log',
+        component: 'view.system_login-log',
+        meta: {
+          title: 'system_login-log',
+          i18nKey: 'route.system_login-log'
         }
       },
       {
@@ -143,6 +170,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'system_role',
           i18nKey: 'route.system_role'
+        }
+      },
+      {
+        name: 'system_test',
+        path: '/system/test',
+        component: 'view.system_test',
+        meta: {
+          title: 'system_test',
+          i18nKey: 'route.system_test'
         }
       }
     ]

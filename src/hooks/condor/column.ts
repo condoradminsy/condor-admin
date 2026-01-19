@@ -58,6 +58,9 @@ export const useColumns = (columns: any) => {
     if (cleanedProps?.readonly !== undefined) {
       Reflect.deleteProperty(cleanedProps, 'readonly');
     }
+    if (cleanedProps?.type === 'textarea') {
+      Reflect.deleteProperty(cleanedProps, 'type');
+    }
     return cleanedProps;
   };
 

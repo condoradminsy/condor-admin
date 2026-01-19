@@ -111,17 +111,18 @@ const toDel = (id: number) => {
     </NTooltip>
   </div>
   <div
-    class="flex items-center justify-between border-b py-2 pl-3 pr-2" 
+    class="flex items-center justify-between border-b py-2 pl-3 pr-2 dark:border-[#303133]" 
     :class="{ 'border-t':index === 0 }"
     v-for="(item, index) in groupList"
     :key="item.id"
   >
     <div
-      class="cursor-pointer py-[2px] px-2 border"
+      class="cursor-pointer py-[2px] px-2 border rounded-md"
       :style="{ '--text-color': themeStore.themeColor }"
       :class="{
-        'rounded-md border-[--text-color]': item.id === activeId,
-        'border-white': item.id !== activeId,
+        'border-[--text-color]': item.id === activeId,
+        'border-white': !themeStore.darkMode && item.id !== activeId,
+        'border-[#303133]': themeStore.darkMode && item.id !== activeId
       }"
       @click="selectGroup(item)"
     >

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, h, onMounted, ref, watch } from 'vue';
+import { computed, h, isVNode, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { NButton, NTag } from 'naive-ui';
 import dayjs from 'dayjs';
 import { VueDraggable } from 'vue-draggable-plus';
@@ -9,7 +10,7 @@ import { useDictStore } from '@/store/modules/dict';
 import { useTable } from '@/hooks/condor/table';
 import { useForm } from '@/hooks/condor/form';
 import { useColumns } from '@/hooks/condor/column';
-
+import { useXlsx } from '@/hooks/condor/xlsx';
 defineOptions({
   name: 'CondorTable'
 });
@@ -71,6 +72,7 @@ const formRef = ref();
 const isShowSearch = ref(props.showSearch);
 const checkedRowKeys = ref([]);
 const columns = ref<any>([]);
+const route = useRoute();
 watch(
   () => props.config.columns,
   newVal => {
@@ -253,6 +255,73 @@ onMounted(() => {
   // 获取表格数据
   getTableData();
 });
+// 字典的值
+const getDictLabel = (code: string, value: any) => {
+  const dictList = dictStore.dictData[code] || [];
+  const info = dictList.find((r: any) => `${r.value}` === `${value}`) || {};
+  if (info?.label) {
+    return info.label;
+  }
+  return value;
+};
+// 虚拟dom的值
+const getVNodeValue = (v: any) => {
+  // console.log('v', v);
+  if (typeof v.children === 'string' || typeof v.children === 'number') {
+    return v.children;
+  } else if (Array.isArray(v.children)) {
+    return v.children
+      .map((child: any) => {
+        if (typeof child === 'string' || typeof child === 'number') return String(child);
+        if (isVNode(child)) return String(getVNodeValue(child) ?? '');
+        return '';
+      })
+      .join('');
+  } else if (v.props) {
+    for (const k of ['value', 'text', 'label', 'title', 'content', 'src', 'href']) {
+      if (v.props[k] !== undefined) {
+        return v.props[k];
+      }
+    }
+  }
+  return '';
+};
+// 导出excel
+const exportTableData = () => {
+  const header: any = [];
+  const data: any = [];
+  columns.value.forEach((item: Condor.Table.Columns) => {
+    if (!['operate', 'selection', 'expand'].includes(item.type as string)) {
+      const title = typeof item.title === 'function' ? item.title() : item.title;
+      header.push(title);
+      tableData.value.forEach((tableRow, index) => {
+        if (data[index] === undefined) {
+          data[index] = [];
+        }
+        let value = tableRow[item.key];
+        if (typeof item.render === 'function') {
+          const v = item.render(tableRow);
+          if (typeof v === 'string' || typeof v === 'number') {
+            value = v;
+          } else if (isVNode(v)) {
+            value = getVNodeValue(v) || value;
+          }
+        } else if (
+          ['condor-dict-radio', 'condor-dict-select', 'condor-dict-checkbox'].includes(item.component?.name) &&
+          item.component.props?.code
+        ) {
+          value = getDictLabel(item.component.props.code, value);
+        }
+        data[index].push(value);
+      });
+    }
+  });
+  useXlsx({
+    data,
+    header,
+    filename: `${route.meta?.title || 'table'}.xlsx`
+  });
+};
 // expose
 defineExpose({
   setForm,
@@ -391,7 +460,7 @@ defineExpose({
               style="padding: 5px 8px"
             >
               <template #trigger>
-                <NButton strong secondary circle>
+                <NButton strong secondary circle @click="exportTableData">
                   <template #icon>
                     <icon-tdesign-folder-export class="text-18px" />
                   </template>

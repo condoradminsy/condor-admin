@@ -171,12 +171,16 @@ const routeMap: RouteMap = {
   "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?",
   "system": "/system",
   "system_admin": "/system/admin",
+  "system_admin-log": "/system/admin-log",
   "system_attachment": "/system/attachment",
   "system_config": "/system/config",
   "system_crontab": "/system/crontab",
+  "system_crud": "/system/crud",
   "system_dict-type": "/system/dict-type",
+  "system_login-log": "/system/login-log",
   "system_menu": "/system/menu",
-  "system_role": "/system/role"
+  "system_role": "/system/role",
+  "system_test": "/system/test"
 };
 
 /**
