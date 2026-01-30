@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import { $t } from '@/locales';
 
 const config = ref<Condor.Table.Config>({
   urls: {
@@ -21,38 +22,67 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'title',
-      title: '标题',
-      operator: 'like',
-      rules: [{ required: true, message: '请输入标题', trigger: 'blur' }]
+      title() {
+        return $t('system.menu.title');
+      },
+      align: 'left',
+      rules: [
+        {
+          required: true,
+          message() {
+            return $t('system.menu.please_input_the_title');
+          },
+          trigger: 'blur'
+        }
+      ],
+      render(row) {
+        return row.i18nkey ? $t(row.i18nkey) : row.title;
+      }
     },
     {
       key: 'name',
-      title: '名称',
-      operator: 'like',
+      title() {
+        return $t('system.menu.name');
+      },
       component: {
         // 只能输入字母数字下划线，且字母开头
         props: {
           allowInput: (value: string) => !value || /^[a-zA-Z][a-zA-Z0-9_-]*$/.test(value)
         }
       },
-      rules: [{ required: true, message: '请输入名称', trigger: 'blur' }]
+      rules: [
+        {
+          required: true,
+          message() {
+            return $t('system.menu.please_input_the_name');
+          },
+          trigger: 'blur'
+        }
+      ]
     },
     {
       key: 'pid',
-      title: '父级菜单',
+      title() {
+        return $t('system.menu.parent_menu');
+      },
       operator: false,
       component: {
         name: 'condor-tree-select',
         props: {
           url: 'core/menu/selectpage',
-          labelField: 'title'
+          labelField: 'title',
+          param: {
+            menu_type: 1
+          }
         }
       },
       visible: false
     },
     {
       key: 'i18nkey',
-      title: '国际化键',
+      title() {
+        return $t('system.menu.i18nkey');
+      },
       operator: false,
       condition(form: any) {
         return form.menu_type === 1;
@@ -72,7 +102,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'weigh',
-      title: '权重',
+      title() {
+        return $t('system.menu.weigh');
+      },
       value: 0,
       operator: false,
       component: {
@@ -84,12 +116,16 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'path',
-      title: '路径',
+      title() {
+        return $t('system.menu.path');
+      },
       operator: false
     },
     {
       key: 'component',
-      title: '组件',
+      title() {
+        return $t('system.menu.component');
+      },
       operator: false,
       condition(form: any) {
         return form.menu_type === 1;
@@ -97,7 +133,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'menu_type',
-      title: '类型',
+      title() {
+        return $t('system.menu.menu_type');
+      },
       operator: false,
       value: 1,
       component: {
@@ -110,16 +148,22 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'active_menu',
-      title: '选中的菜单项',
+      title() {
+        return $t('system.menu.active_menu');
+      },
       operator: false,
       condition(form: any) {
         return form.menu_type === 1;
       },
-      tips: '当前路由需要选中的菜单项(用于跳转至不在左侧菜单显示的路由且需要高亮某个菜单的情况)'
+      tips() {
+        return $t('system.menu.the_menu_active_menu_tips');
+      }
     },
     {
       key: 'redirect',
-      title: '重定向',
+      title() {
+        return $t('system.menu.redirect');
+      },
       operator: false,
       visible: false,
       condition(form: any) {
@@ -128,7 +172,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'hidden',
-      title: '是否隐藏',
+      title() {
+        return $t('system.menu.hidden');
+      },
       operator: false,
       condition(form: any) {
         return form.menu_type === 1;
@@ -143,7 +189,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'is_keep',
-      title: '是否缓存',
+      title() {
+        return $t('system.menu.is_keep');
+      },
       operator: false,
       condition(form: any) {
         return form.menu_type === 1;
@@ -158,7 +206,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
       value: 1,
       component: {
         name: 'n-switch',
@@ -170,7 +220,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 120,
       fixed: 'right',
       key: 'operation',

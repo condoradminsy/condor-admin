@@ -228,14 +228,14 @@ const local: App.I18n.Schema = {
     home: '控制台',
     system: '系统管理',
     system_admin: '管理员列表',
-    system_config: '系统配置',
-    'system_dict-type': '字典类型',
+    system_config: '配置管理',
+    'system_dict-type': '字典管理',
     system_menu: '菜单管理',
     system_role: '角色管理',
     system_attachment: '附件管理',
     system_crontab: '定时任务',
     system_crud: 'CRUD生成',
-    system_test: '测试页面',
+    system_test: 'Crud测试',
     'system_admin-log': '操作日志',
     'system_login-log': '登录日志'
   },
@@ -361,7 +361,47 @@ const local: App.I18n.Schema = {
     }
   },
   condor: {
-    Operation: '操作'
+    common: {
+      permission: '权限管理',
+      key: '键',
+      value: '值',
+      append: '追加',
+      add: '添加',
+      edit: '编辑',
+      delete: '删除',
+      expand: '展开',
+      collapse: '收起',
+      no_data_available: '暂无数据',
+      export: '导出',
+      select: '选择',
+      upload: '上传',
+      encryption_error: '加密失败',
+      createtime: '创建时间',
+      updatetime: '更新时间',
+      status: '状态'
+    },
+    component: {
+      group: '分组',
+      edit_group: '编辑分组',
+      add_group: '添加分组',
+      you_want_to_delete_the_group: '您确定要删除该分组吗？',
+      upload_failed: '上传失败',
+      please_enter_the_content: '请输入内容',
+      confirm_delete_selected_data: '确认删除选中的数据吗？',
+      table_list: '表格/列表',
+      column_setting: '列设置',
+      please_select: '请选择',
+      check_all_uncheck_all: '全选/全不选',
+      expand_or_collapse: '展开/收起',
+      parent_child_linkage: '父子联动',
+      filter_data: '过滤数据',
+      choose_image: '选择图片',
+      recent_week: '最近一周',
+      recent_month: '最近一月',
+      recent_three_month: '最近三月',
+      total_items: '共 {total} 条',
+      are_you_sure_you_want_to_delete_this_record: '确定删除该行数据吗？'
+    }
   }
 };
 

@@ -3,7 +3,10 @@ import { h, ref } from 'vue';
 import { NCode, NPopover } from 'naive-ui';
 import hljs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';
+import { $t } from '@/locales';
+
 hljs.registerLanguage('json', json);
+
 const config = ref<Condor.Table.Config>({
   urls: {
     index: 'core/admin-log/index',
@@ -20,22 +23,30 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'username',
-      title: '操作人',
+      title() {
+        return $t('system.admin-log.username');
+      },
       operator: 'like'
     },
     {
       key: 'title',
-      title: '标题',
+      title() {
+        return $t('system.admin-log.title');
+      },
       operator: 'like'
     },
     {
       key: 'os',
-      title: '操作系统',
+      title() {
+        return $t('system.admin-log.os');
+      },
       operator: false
     },
     {
       key: 'browser',
-      title: '浏览器',
+      title() {
+        return $t('system.admin-log.browser');
+      },
       operator: false
     },
     {
@@ -45,18 +56,24 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'ip_location',
-      title: 'IP 归属地',
+      title() {
+        return $t('system.admin-log.ip_location');
+      },
       operator: false
     },
     {
       key: 'url',
-      title: '请求地址',
+      title() {
+        return $t('system.admin-log.url');
+      },
       width: 200,
       operator: 'like'
     },
     {
       key: 'content',
-      title: '请求内容',
+      title() {
+        return $t('system.admin-log.content');
+      },
       operator: false,
       width: 200,
       render(row) {
@@ -86,15 +103,19 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'createtime',
-      title: '创建时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
       width: 200,
       form: false,
       operator: false
     },
     {
       type: 'operate',
-      title: '操作',
-      width: 60,
+      title() {
+        return $t('common.operate');
+      },
+      width: 80,
       key: 'operation',
       buttons: ['del']
     }

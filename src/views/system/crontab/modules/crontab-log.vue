@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue';
 import { NTag } from 'naive-ui';
+import { $t } from '@/locales';
 const modalRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
@@ -17,38 +18,52 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'name',
-      title: '名称',
+      title() {
+        return $t('system.crontab.name');
+      },
       operator: 'like'
     },
     {
       key: 'target',
-      title: '任务调用',
+      title() {
+        return $t('system.crontab.target');
+      },
       operator: false
     },
     {
       key: 'params',
-      title: '任务参数',
+      title() {
+        return $t('system.crontab.params');
+      },
       operator: false
     },
     {
       key: 'exception_info',
-      title: '异常信息',
+      title() {
+        return $t('system.crontab.exception_info');
+      },
       operator: false
     },
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
       search: {
         component: {
           name: 'n-select',
           props: {
             options: [
               {
-                label: '成功',
+                label() {
+                  return $t('system.crontab.successful');
+                },
                 value: 1
               },
               {
-                label: '失败',
+                label() {
+                  return $t('system.crontab.failure');
+                },
                 value: 2
               }
             ]
@@ -63,20 +78,24 @@ const config = ref<Condor.Table.Config>({
             size: 'small'
           },
           {
-            default: () => (row.status === 1 ? '成功' : '失败')
+            default: () => (row.status === 1 ? $t('system.crontab.successful') : $t('system.crontab.failure'))
           }
         );
       }
     },
     {
       key: 'createtime',
-      title: '创建时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
       form: false,
       operator: false
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 100,
       key: 'operation',
       buttons: ['del']
@@ -95,7 +114,13 @@ defineExpose({
 </script>
 
 <template>
-  <CondorModal ref="modalRef" width="80vw" height="700px" :show-action="false" title="任务日志">
+  <CondorModal
+    ref="modalRef"
+    width="80vw"
+    height="700px"
+    :show-action="false"
+    :title="$t('system.crontab.crontab_log')"
+  >
     <CondorTable :config="config" :init-search-params="initParam" :buttons="['refresh', 'del']" />
   </CondorModal>
 </template>

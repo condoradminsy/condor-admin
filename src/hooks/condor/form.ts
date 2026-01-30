@@ -3,6 +3,7 @@ import { NButton, NTooltip } from 'naive-ui';
 import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
 import condorAuth from '@/components/condor/condor-auth.vue';
+import { $t } from '@/locales';
 export const useForm = ({ columns, urls, formRef, formModalRef, successFn }: any) => {
   const state = reactive<Condor.Form.StateProps>({
     // 加载状态
@@ -145,7 +146,7 @@ export const useForm = ({ columns, urls, formRef, formModalRef, successFn }: any
                     type: 'primary',
                     size: 'small',
                     onClick: () => {
-                      formModalRef.value?.open({ title: '编辑', type: 'edit' });
+                      formModalRef.value?.open({ title: $t('condor.common.edit'), type: 'edit' });
                       setForm(row, 'id');
                     }
                   },
@@ -153,7 +154,7 @@ export const useForm = ({ columns, urls, formRef, formModalRef, successFn }: any
                     icon: () => h(Icon, { icon: 'ic:baseline-edit', width: 16 })
                   }
                 ),
-              default: () => '编辑'
+              default: () => $t('condor.common.edit')
             }
           )
       }

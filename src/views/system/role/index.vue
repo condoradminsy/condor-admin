@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { h, ref } from 'vue';
 import { NButton } from 'naive-ui';
+import { $t } from '@/locales';
 
 const tableRef = ref();
 const layerRef = ref();
 const columns = ref([
   {
-    title: '角色名称',
+    title() {
+      return $t('system.role.name');
+    },
     key: 'name',
     component: {
       props: {
@@ -15,7 +18,9 @@ const columns = ref([
     }
   },
   {
-    title: '权限规则',
+    title() {
+      return $t('system.role.rules');
+    },
     key: 'rules',
     component: {
       name: 'condor-tree-check',
@@ -50,7 +55,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'pid',
-      title: '上级ID',
+      title() {
+        return $t('system.role.pid');
+      },
       operator: false,
       component: {
         name: 'condor-tree-select',
@@ -62,12 +69,18 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'name',
-      title: '角色名称'
+      title() {
+        return $t('system.role.name');
+      }
     },
     {
       key: 'code',
-      title: '角色标识',
-      tips: 'superadmin 为超级管理员',
+      title() {
+        return $t('system.role.code');
+      },
+      tips() {
+        return $t('system.role.code_tips');
+      },
       component: {
         props: {
           allowInput: (value: string) => !value || /^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)
@@ -77,7 +90,9 @@ const config = ref<Condor.Table.Config>({
 
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
       value: 1,
       component: {
         name: 'n-switch',
@@ -89,7 +104,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 200,
       key: 'operation',
       buttons: [
@@ -105,13 +122,13 @@ const config = ref<Condor.Table.Config>({
               onClick: () => {
                 layerRef.value.setForm(row, 'id,pid,code,status');
                 layerRef.value.open({
-                  title: '权限设置',
+                  title: $t('system.role.setting'),
                   type: 'edit'
                 });
               }
             },
             {
-              default: () => '权限规则'
+              default: () => $t('system.role.rules')
             }
           );
         },

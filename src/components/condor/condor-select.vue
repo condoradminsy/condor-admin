@@ -11,7 +11,6 @@ const props = withDefaults(
     url: string;
     multiple?: boolean;
     checkable?: boolean;
-    placeholder?: any;
     labelField?: string;
     keyField?: string;
     isPagination?: boolean;
@@ -22,7 +21,6 @@ const props = withDefaults(
     multiple: false,
     checkable: true,
     isPagination: true,
-    placeholder: '请选择',
     labelField: 'name',
     keyField: 'id',
     maxTagCount: 10,
@@ -142,7 +140,6 @@ const renderTag = ({ option }: any) => {
       :options="options"
       :clearable="props.checkable"
       :multiple="props.multiple"
-      :placeholder="props.placeholder"
       :loading="loading"
       filterable
       remote

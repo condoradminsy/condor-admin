@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { provide, ref } from 'vue';
+import { $t } from '@/locales';
 const modalRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
@@ -20,16 +21,22 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'label',
-      title: '标题',
+      title() {
+        return $t('system.dict-type.title');
+      },
       operator: 'like'
     },
     {
       key: 'value',
-      title: '值'
+      title() {
+        return $t('system.dict-type.value');
+      }
     },
     {
       key: 'color',
-      title: '颜色',
+      title() {
+        return $t('system.dict-type.color');
+      },
       operator: false,
       component: {
         name: 'n-color-picker',
@@ -41,7 +48,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'weigh',
-      title: '权重',
+      title() {
+        return $t('system.dict-type.weigh');
+      },
       value: 0,
       operator: false,
       component: {
@@ -53,12 +62,16 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'remark',
-      title: '备注',
+      title() {
+        return $t('system.dict-type.remark');
+      },
       operator: false
     },
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
       value: 1,
       component: {
         name: 'n-switch',
@@ -70,7 +83,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 200,
       key: 'operation',
       buttons: ['edit', 'del']
@@ -97,7 +112,7 @@ defineExpose({
     ref="modalRef"
     custom-class="dict-modal"
     :show-action="false"
-    title="字典数据"
+    :title="$t('system.dict-type.dictData')"
     width="100vw"
     height="100vh"
   >

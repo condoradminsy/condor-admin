@@ -36,7 +36,7 @@ const fieldChange = (data: any) => {
         dict_code: ''
       },
       table: {
-        operator: '=',
+        operator: '=' as string | boolean,
         visible: true
       }
     };
@@ -51,6 +51,10 @@ const fieldChange = (data: any) => {
     else if (['content'].includes(item.field)) {
       row.type = 'editor';
       row.name = '富文本';
+      row.table = {
+        operator: false,
+        visible: false
+      };
     }
     formList.value.push(row);
   });

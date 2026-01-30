@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { $t } from '@/locales';
+
 const config = ref<Condor.Table.Config>({
   urls: {
     index: '/core/system-test/index',
@@ -14,31 +16,148 @@ const config = ref<Condor.Table.Config>({
     {
       title: 'ID',
       key: 'id',
-      form: false
+      form: false,
+      operator: false,
+      visible: false
     },
     {
-      title: '名称',
+      title() {
+        return $t('system.test.name');
+      },
       key: 'name',
-      component: {
-        name: 'condor-dict-radio',
-        props: {
-          code: 'dict_component'
-        }
-      }
+      operator: 'like'
     },
     {
-      title: '目标',
+      title() {
+        return $t('system.test.target');
+      },
       key: 'target',
+      operator: false,
+      visible: false,
       component: {
-        name: 'n-date-picker',
         props: {
-          type: 'date'
+          type: 'textarea',
+          rows: 4
         }
       }
     },
     {
-      title: '图片',
+      title() {
+        return $t('system.test.title');
+      },
+      key: 'title',
+      operator: 'like'
+    },
+    {
+      title() {
+        return $t('system.test.content');
+      },
+      key: 'content',
+      operator: false,
+      visible: false,
+      component: {
+        name: 'condor-editor'
+      }
+    },
+    {
+      title() {
+        return $t('system.test.image');
+      },
       key: 'image',
+      operator: false,
+      component: {
+        name: 'condor-upload',
+        props: {
+          max: 1,
+          multiple: false
+        }
+      }
+    },
+    {
+      title() {
+        return $t('system.test.images');
+      },
+      key: 'images',
+      operator: false,
+      visible: false,
+      component: {
+        name: 'condor-upload',
+        props: {
+          max: 9,
+          multiple: true
+        }
+      }
+    },
+    {
+      title() {
+        return $t('system.test.attachfile');
+      },
+      key: 'attachfile',
+      operator: false,
+      component: {
+        name: 'condor-upload',
+        props: {
+          max: 1,
+          multiple: false
+        }
+      }
+    },
+    {
+      title() {
+        return $t('system.test.keywords');
+      },
+      key: 'keywords',
+      operator: false,
+      component: {
+        props: {
+          type: 'textarea',
+          rows: 4
+        }
+      }
+    },
+    {
+      title() {
+        return $t('system.test.description');
+      },
+      key: 'description',
+      operator: false,
+      component: {
+        props: {
+          type: 'textarea',
+          rows: 4
+        }
+      }
+    },
+    {
+      title() {
+        return $t('system.test.price');
+      },
+      key: 'price',
+      component: {
+        name: 'n-input-number',
+        props: {
+          showButton: false
+        }
+      }
+    },
+    {
+      title() {
+        return $t('system.test.views');
+      },
+      key: 'views',
+      component: {
+        name: 'n-input-number',
+        props: {
+          showButton: false
+        }
+      }
+    },
+    {
+      title() {
+        return $t('system.test.activitytime');
+      },
+      key: 'activitytime',
+      operator: 'between',
       component: {
         name: 'n-date-picker',
         props: {
@@ -47,19 +166,34 @@ const config = ref<Condor.Table.Config>({
       }
     },
     {
-      title: '创建时间',
-      key: 'createtime',
+      title() {
+        return $t('system.test.refreshtime');
+      },
+      key: 'refreshtime',
+      operator: 'between',
       component: {
         name: 'n-date-picker',
         props: {
-          type: 'daterange'
+          type: 'datetime'
         }
       }
     },
     {
-      title: '更新时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
+      key: 'createtime',
+      form: false,
+      operator: 'between'
+    },
+    {
+      title() {
+        return $t('condor.common.updatetime');
+      },
       key: 'updatetime',
-      form: false
+      form: false,
+      operator: false,
+      visible: false
     }
   ]
 });

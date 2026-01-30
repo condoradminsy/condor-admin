@@ -4,11 +4,13 @@ import { NInput } from 'naive-ui';
 import { transformColorWithOpacity } from '@sa/color';
 import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
+import { $t } from '@/locales';
 defineOptions({
   name: 'CondorAttachmentType'
 });
 const themeStore = useThemeStore();
-const bgColor = transformColorWithOpacity(themeStore.themeColor, 0.1);
+const bgColor1 = transformColorWithOpacity(themeStore.themeColor, 0.1);
+const bgColor2 = transformColorWithOpacity(themeStore.themeColor, 0.3, '#000000');
 const props = withDefaults(
   defineProps<{
     value?: number;
@@ -47,13 +49,7 @@ const getList = () => {
   })
     .then(({ data, error }) => {
       if (!error) {
-        list.value = [
-          {
-            id: 0,
-            name: '未分组'
-          },
-          ...data.list
-        ];
+        list.value = data;
       }
     })
     .finally(() => {
@@ -64,7 +60,7 @@ getList();
 const addOrEdit = (row: any) => {
   const name = ref(row.name || null);
   const d: any = window.$dialog?.create({
-    title: row.id ? '编辑分组' : '添加分组',
+    title: row.id ? $t('condor.component.edit_group') : $t('condor.component.add_group'),
     content: () => {
       return h(
         'div',
@@ -83,8 +79,8 @@ const addOrEdit = (row: any) => {
         }
       );
     },
-    positiveText: '确定',
-    negativeText: '取消',
+    positiveText: $t('common.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: () => {
       d.loading = true;
       return new Promise((resolve, reject) => {
@@ -126,12 +122,16 @@ const toDel = (id: number) => {
 </script>
 
 <template>
-  <div class="mb-2 border rounded-md bg-white">
+  <!-- eslint-disable vue/no-static-inline-styles -->
+  <div
+    class="mb-2 border rounded-md bg-white dark:border-0 dark:bg-[--bg-attachment-dark]"
+    :style="{ '--bg-attachment-dark': '#26262A' }"
+  >
     <div
-      class="flex items-center justify-between bg-[--bg-attachment-type] py-[5px] pl-3 pr-1"
-      :style="{ '--bg-attachment-type': bgColor }"
+      class="flex items-center justify-between bg-[--bg-attachment-type] py-[5px] pl-3 pr-1 dark:bg-[--bg-dark-attachment-type]"
+      :style="{ '--bg-attachment-type': bgColor1, '--bg-dark-attachment-type': bgColor2 }"
     >
-      <div>分组</div>
+      <div>{{ $t('condor.component.group') }}</div>
       <div class="flex items-center">
         <!-- eslint-disable vue/no-static-inline-styles -->
         <NTooltip trigger="hover" style="padding: 5px 8px">
@@ -140,7 +140,7 @@ const toDel = (id: number) => {
               <icon-solar-refresh-bold class="cursor-pointer text-18px" :class="{ 'animate-spin': isLoading }" />
             </NButton>
           </template>
-          刷新
+          {{ $t('common.refresh') }}
         </NTooltip>
         <!-- eslint-disable vue/no-static-inline-styles -->
         <NTooltip trigger="hover" style="padding: 5px 8px">
@@ -149,7 +149,7 @@ const toDel = (id: number) => {
               <icon-material-symbols-add-2-rounded class="cursor-pointer text-18px" />
             </NButton>
           </template>
-          添加
+          {{ $t('condor.common.add') }}
         </NTooltip>
       </div>
     </div>
@@ -158,12 +158,12 @@ const toDel = (id: number) => {
         <div
           v-for="(item, index) in list"
           :key="index"
-          class="mb-2 w-full flex items-center justify-between border rounded-sm px-2 py-1"
+          class="mb-2 w-full flex items-center justify-between border rounded-sm px-2 py-1 dark:border-[#585757]"
         >
           <NRadio :value="item.id">
             <span>{{ item.name }}</span>
           </NRadio>
-          <div class="flex items-center space-x-2">
+          <div v-if="item.id" class="flex items-center space-x-2">
             <NButton size="small" text type="primary" @click="addOrEdit(item)">
               <icon-ic-baseline-edit :font-size="16"></icon-ic-baseline-edit>
             </NButton>
@@ -173,7 +173,7 @@ const toDel = (id: number) => {
                   <icon-material-symbols-delete-outline :font-size="16"></icon-material-symbols-delete-outline>
                 </NButton>
               </template>
-              <div class="text-xs">确认删除分组嘛？</div>
+              <div class="text-xs">{{ $t('condor.component.you_want_to_delete_the_group') }}</div>
             </NPopconfirm>
           </div>
         </div>

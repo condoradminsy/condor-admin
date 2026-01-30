@@ -1,0 +1,36 @@
+import type { SystemCrontabSchema } from '@/typings/condor/i18n/system/crontab';
+const local: SystemCrontabSchema = {
+  name: '任务名称',
+  type: '任务类型',
+  target: '调用任务',
+  cron_value: 'cron表达式',
+  params: '任务参数',
+  remark: '备注',
+  run_once: '执行一次',
+  crontab_log: '任务日志',
+  exception_info: '异常信息',
+  successful: '成功',
+  failure: '失败',
+  every_day: '每天',
+  every_hour: '每小时',
+  n_hour: 'N小时',
+  n_minute: 'N分钟',
+  n_second: 'N秒',
+  every_week: '每周',
+  every_month: '每月',
+  every_year: '每年',
+  monday: '周一',
+  tuesday: '周二',
+  wednesday: '周三',
+  thursday: '周四',
+  friday: '周五',
+  saturday: '周六',
+  sunday: '周日',
+  month: '月',
+  day: '日',
+  hour: '时',
+  minute: '分',
+  second: '秒'
+};
+
+export default local;

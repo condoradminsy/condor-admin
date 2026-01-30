@@ -188,7 +188,7 @@ function onUpdateValue(_: string, option: any) {
       </div>
     </NInputGroup>
     <NInputGroup v-if="props.type === 'number'" class="mt-2">
-      <NInputGroupLabel>展示按钮</NInputGroupLabel>
+      <NInputGroupLabel>增减按钮</NInputGroupLabel>
       <div class="h-[34px] w-full flex items-center border pl-3">
         <NSwitch v-model:value="formValue.show_button" :checked-value="true" :unchecked-value="false" />
       </div>

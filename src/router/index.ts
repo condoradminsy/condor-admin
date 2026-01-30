@@ -8,6 +8,7 @@ import {
 } from 'vue-router';
 import { createBuiltinVueRoutes } from './routes/builtin';
 import { createRouterGuard } from './guard';
+import { createI18nGuard } from './i18n';
 
 const { VITE_ROUTER_HISTORY_MODE = 'history', VITE_BASE_URL } = import.meta.env;
 
@@ -26,5 +27,6 @@ export const router = createRouter({
 export async function setupRouter(app: App) {
   app.use(router);
   createRouterGuard(router);
+  createI18nGuard(router);
   await router.isReady();
 }

@@ -575,12 +575,52 @@ declare namespace App {
         };
       };
       condor: {
-        Operation: string;
+        common: {
+          permission: string;
+          key: string;
+          value: string;
+          append: string;
+          add: string;
+          edit: string;
+          delete: string;
+          expand: string;
+          collapse: string;
+          no_data_available: string;
+          export: string;
+          select: string;
+          upload: string;
+          encryption_error: string;
+          createtime: string;
+          updatetime: string;
+          status: string;
+        };
+        component: {
+          group: string;
+          edit_group: string;
+          add_group: string;
+          you_want_to_delete_the_group: string;
+          upload_failed: string;
+          please_enter_the_content: string;
+          confirm_delete_selected_data: string;
+          table_list: string;
+          column_setting: string;
+          please_select: string;
+          expand_or_collapse: string;
+          check_all_uncheck_all: string;
+          parent_child_linkage: string;
+          filter_data: string;
+          choose_image: string;
+          recent_week: string;
+          recent_month: string;
+          recent_three_month: string;
+          total_items: string;
+          are_you_sure_you_want_to_delete_this_record: string;
+        };
       };
     };
 
-    type GetI18nKey<T extends Record<string, unknown>, K extends keyof T = keyof T> = K extends string
-      ? T[K] extends Record<string, unknown>
+    type GetI18nKey<T extends object, K extends keyof T = keyof T> = K extends string
+      ? T[K] extends object
         ? `${K}.${GetI18nKey<T[K]>}`
         : K
       : never;

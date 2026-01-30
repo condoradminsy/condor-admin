@@ -108,14 +108,14 @@ const reset = () => {
           <div class="opearation w-full flex items-center justify-start sm:justify-end space-x-2">
             <NButton type="warning" @click="reset">
               <icon-material-symbols-refresh class="text-16px" />
-              <span>重置</span>
+              <span>{{ $t('common.reset') }}</span>
             </NButton>
             <NButton type="primary" @click="search">
               <icon-ri-search-line class="mr-1 text-16px" />
-              <span>搜索</span>
+              <span>{{ $t('common.search') }}</span>
             </NButton>
             <NButton v-if="showCollapse" type="tertiary" @click="collapsed = !collapsed">
-              <span>{{ collapsed ? '展开' : '折叠' }}</span>
+              <span>{{ collapsed ? $t('condor.common.expand') : $t('condor.common.collapse') }}</span>
               <icon-ic-sharp-keyboard-arrow-down
                 class="text-22px transition-all delay-100"
                 :class="{ 'rotate-180': !collapsed }"

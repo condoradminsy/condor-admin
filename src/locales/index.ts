@@ -28,3 +28,37 @@ export function setLocale(locale: App.I18n.LangType) {
 export function getLocale(): App.I18n.LangType {
   return i18n.global.locale.value as App.I18n.LangType;
 }
+
+const loaded = new Set<string>();
+
+// 加载页面国际化
+export async function loadPageLocale(page: string) {
+  try {
+    if (!page || page === '/home' || page === '/system/crud') return;
+    const str = page.replace(/^\/+|\/+$/g, '');
+    if (loaded.has(str)) return;
+    const condorMessages = await import(
+      /* @vite-ignore */
+      `./condor/${str}/index.ts`
+    );
+    Object.keys(condorMessages.default).forEach(key => {
+      const messageData = condorMessages.default[key];
+      // 根据 page 的路径构建嵌套结构
+      const pathParts = str.split('/');
+      // 从内向外构建嵌套对象
+      let currentLevel = {};
+      // 构建嵌套结构
+      for (let i = pathParts.length - 1; i >= 0; i -= 1) {
+        if (i === pathParts.length - 1) {
+          // 最内层
+          currentLevel = { [pathParts[i]]: messageData };
+        } else {
+          currentLevel = { [pathParts[i]]: currentLevel };
+        }
+      }
+      // 合并到 i18n
+      i18n.global.mergeLocaleMessage(key, currentLevel);
+    });
+    loaded.add(str);
+  } catch {}
+}

@@ -4,6 +4,8 @@ import { computed, onBeforeUnmount, shallowRef } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { getBaseUrl } from '@/service/request/shared';
 import { fetchUpload } from '@/service/api';
+import { $t } from '@/locales';
+
 defineOptions({
   name: 'CondorEditor'
 });
@@ -21,7 +23,7 @@ const props = withDefaults(
     mode: 'default',
     height: 300,
     disabled: false,
-    placeholder: '请输入内容...'
+    placeholder: $t('condor.component.please_enter_the_content')
   }
 );
 // 编辑器实例，必须用 shallowRef
@@ -55,7 +57,7 @@ const customUpload = (file: File, insertFn: InsertFnType) => {
       insertFn(url, alt, href);
     })
     .catch(err => {
-      window.$message?.error(err.message || '上传失败');
+      window.$message?.error(err.message || $t('condor.component.upload_failed'));
     });
 };
 const editorConfig = {

@@ -6,6 +6,8 @@ import { SetupStoreId } from '@/enum';
 export const useDictStore = defineStore(SetupStoreId.Dict, () => {
   const dictData = ref<any>({});
 
+  const status = ref(false);
+
   function init() {
     fetchGetDict().then(({ error, data }) => {
       if (!error) {
@@ -13,13 +15,14 @@ export const useDictStore = defineStore(SetupStoreId.Dict, () => {
           acc[cur.name] = cur.dict_data;
           return acc;
         }, {});
+        status.value = true;
       }
     });
   }
 
-  init();
-
   return {
-    dictData
+    dictData,
+    status,
+    init
   };
 });

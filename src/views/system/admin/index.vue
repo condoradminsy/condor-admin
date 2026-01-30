@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { $t } from '@/locales';
 
 const config = ref<Condor.Table.Config>({
   urls: {
@@ -20,7 +21,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'role_ids',
-      title: '角色',
+      title() {
+        return $t('system.admin.role');
+      },
       operator: false,
       component: {
         name: 'condor-tree-select',
@@ -34,58 +37,79 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'username',
-      title: '用户名',
+      title() {
+        return $t('system.admin.username');
+      },
       operator: 'like',
       rules: [
         {
           required: true,
-          message: '请输入用户名',
+          message() {
+            return $t('system.admin.please_input_the_username');
+          },
           trigger: 'blur'
         }
       ]
     },
     {
       key: 'nickname',
-      title: '昵称',
+      title() {
+        return $t('system.admin.nickname');
+      },
       operator: 'like'
     },
     {
       key: 'password',
-      title: '密码',
+      title() {
+        return $t('system.admin.password');
+      },
       operator: false,
       visible: false
     },
     {
       key: 'email',
-      title: '邮箱',
+      title() {
+        return $t('system.admin.email');
+      },
       operator: 'like'
     },
     {
       key: 'mobile',
-      title: '手机号码',
+      title() {
+        return $t('system.admin.mobile');
+      },
       operator: 'like'
     },
     {
       key: 'logintime',
-      title: '登录时间',
+      title() {
+        return $t('system.admin.logintime');
+      },
       operator: false,
       formatter: 'datetime',
       form: false
     },
     {
       key: 'loginip',
-      title: '登录IP',
+      title() {
+        return $t('system.admin.loginip');
+      },
       operator: false,
       form: false
     },
     {
       key: 'createtime',
-      title: '创建时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
       form: false
     },
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
+      value: 1,
       component: {
         name: 'n-switch',
         props: {
@@ -96,7 +120,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 120,
       key: 'operation',
       buttons: ['edit', 'del']

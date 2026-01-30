@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useForm } from '@/hooks/condor/form';
+import { $t } from '@/locales';
+
 defineOptions({
   name: 'CondorLayerForm'
 });
@@ -18,8 +20,8 @@ const props = withDefaults(
   {
     isDraggable: true,
     width: '800px',
-    cancelText: '取消',
-    subBtuText: '确定',
+    cancelText: $t('common.cancel'),
+    subBtuText: $t('common.confirm'),
     formLabelWidth: '100px',
     colSpan: 24
   }
@@ -71,7 +73,7 @@ defineExpose({
             <NFormItemGi
               v-if="hasCondition(item)"
               :span="item.span || props.colSpan"
-              :label="item.title"
+              :label="typeof item.title === 'function' ? item.title(form) : item.title"
               :path="item.key"
             >
               <slot :name="`form-${item.key}`">
@@ -79,7 +81,7 @@ defineExpose({
                   <CondorFormItem v-model:value="form[item.key]" :column="item"></CondorFormItem>
                   <div v-if="item.tips" class="pt-1 text-xs text-gray-500">
                     <icon-ri-information-line class="inline-block" />
-                    <span class="ml-1">{{ item.tips }}</span>
+                    <span class="ml-1">{{ typeof item.tips === 'function' ? item.tips(form) : item.tips }}</span>
                   </div>
                 </div>
               </slot>

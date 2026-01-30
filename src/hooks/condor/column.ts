@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-
+import { $t } from '@/locales';
 export const useColumns = (columns: any) => {
   // 开关组件
   const handleSwitchComponent = (item: any, component: any) => {
@@ -10,8 +10,18 @@ export const useColumns = (columns: any) => {
         name: 'n-select',
         props: {
           options: [
-            { label: '是', value: component.props?.checkedValue ?? true },
-            { label: '否', value: component.props?.uncheckedValue ?? false }
+            {
+              label() {
+                return $t('common.yesOrNo.yes');
+              },
+              value: component.props?.checkedValue ?? true
+            },
+            {
+              label() {
+                return $t('common.yesOrNo.no');
+              },
+              value: component.props?.uncheckedValue ?? false
+            }
           ]
         }
       }
@@ -27,9 +37,12 @@ export const useColumns = (columns: any) => {
         props: {
           type: 'datetimerange',
           shortcuts: {
-            最近一周: () => [new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), new Date()],
-            最近一个月: () => [new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), new Date()],
-            最近三个月: () => [new Date(Date.now() - 90 * 24 * 60 * 60 * 1000), new Date()]
+            [$t('condor.component.recent_week')]: () => [new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), new Date()],
+            [$t('condor.component.recent_month')]: () => [new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), new Date()],
+            [$t('condor.component.recent_three_month')]: () => [
+              new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+              new Date()
+            ]
           }
         }
       }

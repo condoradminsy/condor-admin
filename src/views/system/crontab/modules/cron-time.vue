@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
+import { $t } from '@/locales';
 const props = withDefaults(
   defineProps<{
     value: any;
@@ -52,65 +53,95 @@ watch(
 
 const cronOptions1 = [
   {
-    label: '每天',
+    label() {
+      return $t('system.crontab.every_day');
+    },
     value: 1
   },
   {
-    label: '每小时',
+    label() {
+      return $t('system.crontab.every_hour');
+    },
     value: 2
   },
   {
-    label: 'N小时',
+    label() {
+      return $t('system.crontab.n_hour');
+    },
     value: 3
   },
   {
-    label: 'N分钟',
+    label() {
+      return $t('system.crontab.n_minute');
+    },
     value: 4
   },
   {
-    label: 'N秒',
+    label() {
+      return $t('system.crontab.n_second');
+    },
     value: 5
   },
   {
-    label: '每周',
+    label() {
+      return $t('system.crontab.every_week');
+    },
     value: 6
   },
   {
-    label: '每月',
+    label() {
+      return $t('system.crontab.every_month');
+    },
     value: 7
   },
   {
-    label: '每年',
+    label() {
+      return $t('system.crontab.every_year');
+    },
     value: 8
   }
 ];
 const cronOptions2 = [
   {
-    label: '周一',
+    label() {
+      return $t('system.crontab.monday');
+    },
     value: 1
   },
   {
-    label: '周二',
+    label() {
+      return $t('system.crontab.tuesday');
+    },
     value: 2
   },
   {
-    label: '周三',
+    label() {
+      return $t('system.crontab.wednesday');
+    },
     value: 3
   },
   {
-    label: '周四',
+    label() {
+      return $t('system.crontab.thursday');
+    },
     value: 4
   },
   {
-    label: '周五',
+    label() {
+      return $t('system.crontab.friday');
+    },
     value: 5
   },
   {
-    label: '周六',
+    label() {
+      return $t('system.crontab.saturday');
+    },
     value: 6
   },
   {
-    label: '周日',
+    label() {
+      return $t('system.crontab.sunday');
+    },
     value: 0
   }
 ];
@@ -119,33 +150,33 @@ const cronOptions2 = [
 <template>
   <div>
     <NSpace>
-      <NSelect v-model:value="cron_value.type" class="w-[100px]" :options="cronOptions1" placeholder="请选择" />
+      <NSelect v-model:value="cron_value.type" class="w-[130px]" :options="cronOptions1" />
       <template v-if="cron_value.type == 8">
-        <NInputNumber v-model:value="cron_value.month" :min="1" :max="12" :show-button="false" class="w-[90px]">
-          <template #suffix>月</template>
+        <NInputNumber v-model:value="cron_value.month" :min="1" :max="12" :show-button="false" class="w-[110px]">
+          <template #suffix>{{ $t('system.crontab.month') }}</template>
         </NInputNumber>
       </template>
       <template v-if="cron_value.type > 6">
-        <NInputNumber v-model:value="cron_value.day" :min="1" :max="31" :show-button="false" class="w-[90px]">
-          <template #suffix>日</template>
+        <NInputNumber v-model:value="cron_value.day" :min="1" :max="31" :show-button="false" class="w-[110px]">
+          <template #suffix>{{ $t('system.crontab.day') }}</template>
         </NInputNumber>
       </template>
       <template v-if="cron_value.type == 6">
-        <NSelect v-model:value="cron_value.week" class="w-[100px]" :options="cronOptions2" placeholder="请选择" />
+        <NSelect v-model:value="cron_value.week" class="w-[110px]" :options="cronOptions2" />
       </template>
       <template v-if="[1, 3, 6, 7, 8].includes(cron_value.type)">
-        <NInputNumber v-model:value="cron_value.hour" :min="0" :max="23" :show-button="false" class="w-[90px]">
-          <template #suffix>时</template>
+        <NInputNumber v-model:value="cron_value.hour" :min="0" :max="23" :show-button="false" class="w-[110px]">
+          <template #suffix>{{ $t('system.crontab.hour') }}</template>
         </NInputNumber>
       </template>
       <template v-if="cron_value.type != 5">
-        <NInputNumber v-model:value="cron_value.minute" :min="0" :max="59" :show-button="false" class="w-[90px]">
-          <template #suffix>分</template>
+        <NInputNumber v-model:value="cron_value.minute" :min="0" :max="59" :show-button="false" class="w-[110px]">
+          <template #suffix>{{ $t('system.crontab.minute') }}</template>
         </NInputNumber>
       </template>
       <template v-if="cron_value.type == 5">
-        <NInputNumber v-model:value="cron_value.second" :min="0" :max="59" :show-button="false" class="w-[90px]">
-          <template #suffix>秒</template>
+        <NInputNumber v-model:value="cron_value.second" :min="0" :max="59" :show-button="false" class="w-[110px]">
+          <template #suffix>{{ $t('system.crontab.second') }}</template>
         </NInputNumber>
       </template>
     </NSpace>

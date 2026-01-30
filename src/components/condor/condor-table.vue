@@ -11,6 +11,7 @@ import { useTable } from '@/hooks/condor/table';
 import { useForm } from '@/hooks/condor/form';
 import { useColumns } from '@/hooks/condor/column';
 import { useXlsx } from '@/hooks/condor/xlsx';
+import { $t } from '@/locales';
 defineOptions({
   name: 'CondorTable'
 });
@@ -288,6 +289,10 @@ const getVNodeValue = (v: any) => {
 };
 // 导出excel
 const exportTableData = () => {
+  if (!tableData.value.length) {
+    window.$message?.error($t('condor.common.no_data_available'));
+    return;
+  }
   const header: any = [];
   const data: any = [];
   columns.value.forEach((item: Condor.Table.Columns) => {
@@ -354,9 +359,9 @@ defineExpose({
               <icon-solar-refresh-bold class="text-18px" :class="{ 'animate-spin': isLoading }" />
             </NButton>
             <CondorAuth v-else-if="item === 'add'" :permission="props.config.urls.add">
-              <NButton type="primary" @click="formModalRef?.open({ title: '添加', type: 'add' })">
+              <NButton type="primary" @click="formModalRef?.open({ title: $t('condor.common.add'), type: 'add' })">
                 <icon-material-symbols-add-2-rounded class="text-16px" />
-                <span class="ml-1">添加</span>
+                <span class="ml-1">{{ $t('condor.common.add') }}</span>
               </NButton>
             </CondorAuth>
             <CondorAuth v-else-if="item === 'del'" :permission="props.config.urls.del">
@@ -364,10 +369,10 @@ defineExpose({
                 <template #trigger>
                   <NButton type="error" :disabled="!checkedRowKeys.length">
                     <icon-material-symbols-delete-outline-sharp class="text-16px" />
-                    <span class="ml-1">删除</span>
+                    <span class="ml-1">{{ $t('condor.common.delete') }}</span>
                   </NButton>
                 </template>
-                <span>确定删除所选数据吗？</span>
+                <span>{{ $t('condor.component.confirm_delete_selected_data') }}</span>
               </NPopconfirm>
             </CondorAuth>
             <CondorVNode v-else-if="typeof item === 'function'" :render="item"></CondorVNode>
@@ -396,7 +401,7 @@ defineExpose({
                   </template>
                 </NButton>
               </template>
-              <span>表格/列表</span>
+              <span>{{ $t('condor.component.table_list') }}</span>
             </NTooltip>
             <!-- eslint-disable -->
             <NTooltip
@@ -451,7 +456,7 @@ defineExpose({
                   </NPopover>
                 </div>
               </template>
-              <span>列设置</span>
+              <span>{{ $t('condor.component.column_setting') }}</span>
             </NTooltip>
             <!-- eslint-disable -->
             <NTooltip
@@ -466,7 +471,7 @@ defineExpose({
                   </template>
                 </NButton>
               </template>
-              <span>导出</span>
+              <span>{{ $t('condor.common.export') }}</span>
             </NTooltip>
             <!-- eslint-disable -->
             <NTooltip
@@ -486,7 +491,7 @@ defineExpose({
                   </template>
                 </NButton>
               </template>
-              <span>搜索</span>
+              <span>{{ $t('common.search') }}</span>
             </NTooltip>
             <CondorVNode v-else-if="typeof item === 'function'" :render="item"></CondorVNode>
           </template>
@@ -543,7 +548,7 @@ defineExpose({
               <NFormItemGi
                 v-if="hasCondition(item)"
                 :span="item.span || props.colSpan"
-                :label="item.title"
+                :label="typeof item.title === 'function' ? item.title(form) : item.title"
                 :path="item.key"
               >
                 <slot :name="`form-item-${item.key}`" :form="form">
@@ -552,9 +557,9 @@ defineExpose({
                       v-model:value="form[item.key]"
                       :column="item"
                     ></CondorFormItem>
-                    <div v-if="item.tips" class="pt-1 text-xs text-gray-500">
+                    <div v-if="item.tips !== undefined" class="pt-1 text-xs text-gray-500">
                       <icon-ri-information-line class="inline-block" />
-                      <span class="ml-1">{{ item.tips }}</span>
+                      <span class="ml-1">{{ typeof item.tips === 'function' ? item.tips(form) : item.tips }}</span>
                     </div>
                   </div>
                 </slot>

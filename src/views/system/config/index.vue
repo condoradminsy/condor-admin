@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
+import { $t } from '@/locales';
 import ConfigGroup from './modules/config-group.vue';
 
 const themeStore = useThemeStore();
@@ -28,22 +29,42 @@ const urls = {
 const configColumns = [
   {
     key: 'key',
-    title: '变量名',
+    title() {
+      return $t('system.config.key');
+    },
     component: {
       props: {
         allowInput: (value: string) => !value || /^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)
       }
     },
-    rules: [{ required: true, message: '变量名不能为空' }]
+    rules: [
+      {
+        required: true,
+        message() {
+          return $t('system.config.key_required');
+        }
+      }
+    ]
   },
   {
     key: 'title',
-    title: '变量标题',
-    rules: [{ required: true, message: '变量标题不能为空' }]
+    title() {
+      return $t('system.config.title');
+    },
+    rules: [
+      {
+        required: true,
+        message() {
+          return $t('system.config.title_required');
+        }
+      }
+    ]
   },
   {
     key: 'value',
-    title: '变量值',
+    title() {
+      return $t('system.config.value');
+    },
     component: {
       props: {
         type: 'textarea',
@@ -53,8 +74,17 @@ const configColumns = [
   },
   {
     key: 'type',
-    title: '变量类型',
-    rules: [{ required: true, message: '变量类型不能为空' }],
+    title() {
+      return $t('system.config.type');
+    },
+    rules: [
+      {
+        required: true,
+        message() {
+          return $t('system.config.type_required');
+        }
+      }
+    ],
     component: {
       name: 'condor-dict-select',
       props: {
@@ -64,8 +94,17 @@ const configColumns = [
   },
   {
     key: 'dict_type',
-    title: '字典类型',
-    rules: [{ required: true, message: '字典类型不能为空' }],
+    title() {
+      return $t('system.config.dict_type');
+    },
+    rules: [
+      {
+        required: true,
+        message() {
+          return $t('system.config.dict_type_required');
+        }
+      }
+    ],
     condition(form: any) {
       return form.type === 'dict';
     },
@@ -78,8 +117,17 @@ const configColumns = [
   },
   {
     key: 'dict_code',
-    title: '关联字典',
-    rules: [{ required: true, message: '关联字典不能为空' }],
+    title() {
+      return $t('system.config.dict_code');
+    },
+    rules: [
+      {
+        required: true,
+        message() {
+          return $t('system.config.dict_code_required');
+        }
+      }
+    ],
     condition(form: any) {
       return form.type === 'dict';
     },
@@ -94,7 +142,9 @@ const configColumns = [
   },
   {
     key: 'is_visible',
-    title: '是否显示',
+    title() {
+      return $t('system.config.is_visible');
+    },
     value: 1,
     component: {
       name: 'n-switch',
@@ -106,7 +156,9 @@ const configColumns = [
   },
   {
     key: 'weigh',
-    title: '权重',
+    title() {
+      return $t('system.config.weigh');
+    },
     value: 0,
     component: {
       name: 'n-input-number',
@@ -118,7 +170,9 @@ const configColumns = [
   },
   {
     key: 'tips',
-    title: '变量说明',
+    title() {
+      return $t('system.config.tips');
+    },
     component: {
       props: {
         type: 'textarea',
@@ -128,7 +182,9 @@ const configColumns = [
   },
   {
     key: 'status',
-    title: '状态',
+    title() {
+      return $t('condor.common.status');
+    },
     value: 1,
     component: {
       name: 'n-switch',
@@ -269,13 +325,13 @@ const updateGroup = (row: any) => {
 };
 
 const addConfig = () => {
-  layerFormRef.value.open({ type: 'add', title: '添加配置' });
+  layerFormRef.value.open({ type: 'add', title: $t('system.config.add_config') });
   layerFormRef.value.setForm({ group_id: group.value.id, group_code: group.value.code }, 'group_id,group_code');
 };
 
 const edit = (row: any) => {
   layerFormRef.value.setForm(row, 'id,group_id,group_code,dict_type,dict_code');
-  layerFormRef.value.open({ type: 'edit', title: '编辑配置' });
+  layerFormRef.value.open({ type: 'edit', title: $t('system.config.update_config') });
 };
 
 const toDel = (id: number) => {
@@ -330,7 +386,7 @@ const resetForm = () => {
           <div>{{ group.name || '' }}</div>
           <NButton size="small" type="primary" @click="addConfig">
             <icon-material-symbols-add-2 :font-size="16"></icon-material-symbols-add-2>
-            <span class="ml-[5px]">添加配置</span>
+            <span class="ml-[5px]">{{ $t('system.config.add_config') }}</span>
           </NButton>
         </div>
         <NForm ref="formRef" label-placement="left" label-width="100px" :model="forms">
@@ -355,7 +411,7 @@ const resetForm = () => {
                         <icon-material-symbols-delete-outline :font-size="14"></icon-material-symbols-delete-outline>
                       </NButton>
                     </template>
-                    <div class="text-xs">确定要删除该配置吗？</div>
+                    <div class="text-xs">{{ $t('system.config.delete_config_tips') }}</div>
                   </NPopconfirm>
                 </div>
               </div>
@@ -363,8 +419,8 @@ const resetForm = () => {
           </div>
         </NForm>
         <div class="flex items-center justify-end pb-5 pr-3 space-x-2" :class="{ 'pt-4': !fields.length }">
-          <NButton @click="resetForm">重置</NButton>
-          <NButton type="primary" @click="submit">保存配置</NButton>
+          <NButton @click="resetForm">{{ $t('common.reset') }}</NButton>
+          <NButton type="primary" @click="submit">{{ $t('system.config.save_config') }}</NButton>
         </div>
       </NGridItem>
     </NGrid>

@@ -2,7 +2,7 @@ import type { AxiosResponse } from 'axios';
 import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
 import { localStg } from '@/utils/storage';
-import { $t } from '@/locales';
+import { $t, getLocale } from '@/locales';
 import { getAuthorization, getBaseUrl, handleExpiredRequest, showErrorMsg } from './shared';
 import type { RequestInstanceState } from './type';
 const { baseURL, otherBaseURL } = getBaseUrl();
@@ -10,9 +10,7 @@ const { baseURL, otherBaseURL } = getBaseUrl();
 export const request = createFlatRequest(
   {
     baseURL,
-    headers: {
-      apifoxToken: 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2'
-    }
+    headers: {}
   },
   {
     defaultState: {
@@ -24,7 +22,7 @@ export const request = createFlatRequest(
     },
     async onRequest(config) {
       const Authorization = getAuthorization();
-      Object.assign(config.headers, { Authorization });
+      Object.assign(config.headers, { Authorization, locale: getLocale() });
 
       return config;
     },

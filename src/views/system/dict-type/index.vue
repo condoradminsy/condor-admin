@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue';
 import { NButton } from 'naive-ui';
+import { $t } from '@/locales';
 import DictData from './modules/dict-data.vue';
 const dictRef = ref();
 const config = ref<Condor.Table.Config>({
@@ -22,12 +23,16 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'title',
-      title: '标题',
+      title() {
+        return $t('system.dict-type.title');
+      },
       operator: 'like'
     },
     {
       key: 'name',
-      title: '名称标识',
+      title() {
+        return $t('system.dict-type.name');
+      },
       operator: 'like',
       component: {
         props: {
@@ -37,7 +42,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'scope',
-      title: '可见范围',
+      title() {
+        return $t('system.dict-type.scope');
+      },
       component: {
         name: 'condor-dict-radio',
         props: {
@@ -48,12 +55,16 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'remark',
-      title: '备注',
+      title() {
+        return $t('system.dict-type.remark');
+      },
       operator: false
     },
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
       value: 1,
       component: {
         name: 'n-switch',
@@ -65,13 +76,17 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'createtime',
-      title: '创建时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
       form: false,
       operator: false
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 200,
       key: 'operation',
       buttons: [
@@ -86,7 +101,7 @@ const config = ref<Condor.Table.Config>({
               }
             },
             {
-              default: () => '字典数据'
+              default: () => $t('system.dict-type.dictData')
             }
           );
         },

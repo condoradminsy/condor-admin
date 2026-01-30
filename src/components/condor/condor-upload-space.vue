@@ -4,6 +4,7 @@ import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
 import { getBaseUrl } from '@/service/request/shared';
 import { useDictStore } from '@/store/modules/dict';
+import { $t } from '@/locales';
 defineOptions({
   name: 'CondorUploadSpace'
 });
@@ -107,7 +108,7 @@ const onOk = () => {
 defineExpose({
   open() {
     values.value = [];
-    modalRef.value.open({ title: '选择图片' });
+    modalRef.value.open({ title: $t('condor.component.choose_image') });
   }
 });
 </script>
@@ -157,7 +158,7 @@ defineExpose({
           </div>
         </div>
         <div v-if="!imageList.length" class="pt-3">
-          <NResult status="info" title="" description="暂无数据"></NResult>
+          <NResult status="info" title="" :description="$t('condor.common.no_data_available')"></NResult>
         </div>
         <div class="w-full flex justify-end pt-4">
           <NPagination

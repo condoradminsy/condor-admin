@@ -1,5 +1,5 @@
-import { onBeforeUnmount, ref, shallowRef } from 'vue';
-import { useEventBus } from '@vueuse/core';
+import { ref, shallowRef } from 'vue';
+import { tryOnUnmounted, useEventBus } from '@vueuse/core';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { getAuthorization } from '@/service/request/shared';
 type SseStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error';
@@ -35,7 +35,6 @@ export function useSse() {
           status.value = 'open';
         },
         onmessage(msg) {
-          console.log('SSE: 收到消息', msg);
           bus.emit(msg.data);
         },
         onclose() {
@@ -55,7 +54,7 @@ export function useSse() {
     }
   };
 
-  onBeforeUnmount(stop);
+  tryOnUnmounted(stop);
 
   return { status, error, start, stop };
 }

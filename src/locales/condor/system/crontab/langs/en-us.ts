@@ -1,0 +1,36 @@
+import type { SystemCrontabSchema } from '@/typings/condor/i18n/system/crontab';
+const local: SystemCrontabSchema = {
+  name: 'Task Name',
+  type: 'Task Type',
+  target: 'Invoke Task',
+  cron_value: 'Cron Expression',
+  params: 'Params',
+  remark: 'Remark',
+  run_once: 'Run Once',
+  crontab_log: 'Crontab Log',
+  exception_info: 'Exception Info',
+  successful: 'Successful',
+  failure: 'Failure',
+  every_day: 'Every Day',
+  every_hour: 'Every Hour',
+  n_hour: 'N Hour',
+  n_minute: 'N Minute',
+  n_second: 'N Second',
+  every_week: 'Every Week',
+  every_month: 'Every Month',
+  every_year: 'Every Year',
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
+  saturday: 'Saturday',
+  sunday: 'Sunday',
+  month: 'Month',
+  day: 'Day',
+  hour: 'Hour',
+  minute: 'Minute',
+  second: 'Second'
+};
+
+export default local;

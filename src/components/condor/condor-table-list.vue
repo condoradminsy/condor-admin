@@ -128,7 +128,7 @@ const handleSizeChange = (pageSize: number) => {
       </div>
       <div v-else-if="row.type == 'operate'" class="condor-col" :style="{ paddingLeft: entry.level * 16 + 'px' }">
         <div class="w-[30px]"></div>
-        <div class="title">{{ $t('condor.Operation') }}</div>
+        <div class="title">{{ $t('common.operate') }}</div>
         <CondorVNode v-if="typeof row.render === 'function'" :row="entry.item" :render="row.render" />
       </div>
     </div>
@@ -147,7 +147,7 @@ const handleSizeChange = (pageSize: number) => {
 }
 .condor-col {
   display: flex;
-  padding: 2px 0;
+  padding: 3px 0;
   .title {
     font-weight: 700;
     display: inline-block;

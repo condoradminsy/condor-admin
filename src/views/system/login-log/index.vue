@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { h, ref } from 'vue';
 import { NTag } from 'naive-ui';
+import { $t } from '@/locales';
+
 const modalRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
@@ -18,17 +20,23 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'username',
-      title: '用户名',
+      title() {
+        return $t('system.login-log.username');
+      },
       operator: 'like'
     },
     {
       key: 'os',
-      title: '操作系统',
+      title() {
+        return $t('system.login-log.os');
+      },
       operator: false
     },
     {
       key: 'browser',
-      title: '浏览器',
+      title() {
+        return $t('system.login-log.browser');
+      },
       operator: false
     },
     {
@@ -38,23 +46,31 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'ip_location',
-      title: 'IP 归属地',
+      title() {
+        return $t('system.login-log.ip_location');
+      },
       operator: false
     },
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
       search: {
         component: {
           name: 'n-select',
           props: {
             options: [
               {
-                label: '成功',
+                label() {
+                  return $t('system.login-log.successful');
+                },
                 value: 1
               },
               {
-                label: '失败',
+                label() {
+                  return $t('system.login-log.failed');
+                },
                 value: 2
               }
             ]
@@ -69,20 +85,24 @@ const config = ref<Condor.Table.Config>({
             size: 'small'
           },
           {
-            default: () => (row.status === 1 ? '成功' : '失败')
+            default: () => (row.status === 1 ? $t('system.login-log.successful') : $t('system.login-log.failed'))
           }
         );
       }
     },
     {
       key: 'createtime',
-      title: '创建时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
       form: false,
       operator: false
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 100,
       key: 'operation',
       buttons: ['del']

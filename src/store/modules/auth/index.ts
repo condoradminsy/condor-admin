@@ -5,11 +5,13 @@ import { useLoading } from '@sa/hooks';
 import JSEncrypt from 'jsencrypt';
 import { fetchGetCaptcha, fetchGetPublicKey, fetchGetUserInfo, fetchLogin } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
+import { useSse } from '@/hooks/condor/sse';
 import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
 import { $t } from '@/locales';
 import { useRouteStore } from '../route';
 import { useTabStore } from '../tab';
+import { useDictStore } from '../dict';
 import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
@@ -40,6 +42,12 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
   /** Is login */
   const isLogin = computed(() => Boolean(token.value));
+
+  // 初始化SSE
+  const { start, status } = useSse();
+
+  // 字典
+  const dictStore = useDictStore();
 
   /** Reset auth store */
   async function resetStore() {
@@ -106,11 +114,6 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     const { data, error: publicKeyError } = await fetchGetPublicKey();
     if (publicKeyError) {
       endLoading();
-      window.$notification?.error({
-        title: 'get public key error',
-        content: 'failed to get public key from server',
-        duration: 4500
-      });
       return;
     }
     const jse = new JSEncrypt();
@@ -119,8 +122,8 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     if (!encryptedBase64) {
       endLoading();
       window.$notification?.error({
-        title: 'encryption error',
-        content: 'password encryption failed',
+        title: $t('common.warning'),
+        content: $t('condor.common.encryption_error'),
         duration: 4500
       });
       return;
@@ -176,7 +179,14 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     if (!error) {
       // update store
       Object.assign(userInfo, info);
-
+      // sse
+      if (status.value !== 'open') {
+        start();
+      }
+      // init dict
+      if (!dictStore.status) {
+        dictStore.init();
+      }
       return true;
     }
 

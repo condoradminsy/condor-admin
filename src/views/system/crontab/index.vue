@@ -2,6 +2,7 @@
 import { h, ref } from 'vue';
 import { NButton } from 'naive-ui';
 import { request } from '@/service/request';
+import { $t } from '@/locales';
 import CronTime from './modules/cron-time.vue';
 import CrontabLog from './modules/crontab-log.vue';
 const logRef = ref();
@@ -25,12 +26,16 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'name',
-      title: '任务名称',
+      title() {
+        return $t('system.crontab.name');
+      },
       operator: 'like'
     },
     {
       key: 'type',
-      title: '任务类型',
+      title() {
+        return $t('system.crontab.type');
+      },
       component: {
         name: 'condor-dict-select',
         props: {
@@ -42,7 +47,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'target',
-      title: '调用任务',
+      title() {
+        return $t('system.crontab.target');
+      },
       operator: false,
       visible: false,
       component: {
@@ -54,7 +61,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'cron_value',
-      title: '定时规则',
+      title() {
+        return $t('system.crontab.cron_value');
+      },
       operator: false,
       render(row) {
         return row.cron;
@@ -62,7 +71,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'params',
-      title: '调用参数',
+      title() {
+        return $t('system.crontab.params');
+      },
       operator: false,
       visible: false,
       component: {
@@ -74,12 +85,16 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'remark',
-      title: '备注',
+      title() {
+        return $t('system.crontab.remark');
+      },
       operator: false
     },
     {
       key: 'status',
-      title: '状态',
+      title() {
+        return $t('condor.common.status');
+      },
       value: 1,
       component: {
         name: 'n-switch',
@@ -91,13 +106,17 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'createtime',
-      title: '创建时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
       form: false,
       operator: false
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 250,
       key: 'operation',
       buttons: [
@@ -134,7 +153,7 @@ const config = ref<Condor.Table.Config>({
               }
             },
             {
-              default: () => '执行一次'
+              default: () => $t('system.crontab.run_once')
             }
           );
         },
@@ -149,7 +168,7 @@ const config = ref<Condor.Table.Config>({
               }
             },
             {
-              default: () => '任务日志'
+              default: () => $t('system.crontab.crontab_log')
             }
           );
         }

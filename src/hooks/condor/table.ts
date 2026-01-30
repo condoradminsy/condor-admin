@@ -4,6 +4,7 @@ import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
 import { useAuthStore } from '@/store/modules/auth';
 import condorAuth from '@/components/condor/condor-auth.vue';
+import { $t } from '@/locales';
 
 export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.UseTableProps) => {
   const state = reactive<Condor.Table.StateProps>({
@@ -18,7 +19,7 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
       showQuickJumper: true,
       showSizePicker: true,
       perfix({ itemCount }: { itemCount: number }) {
-        return `共 ${itemCount} 条`;
+        return $t('condor.component.total_items', { total: itemCount });
       }
     },
     initParams: {},
@@ -167,7 +168,7 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
                     }
                   },
                   {
-                    default: () => '确定删除该行数据吗？',
+                    default: () => $t('condor.component.are_you_sure_you_want_to_delete_this_record'),
                     trigger: () =>
                       h(
                         NButton,
@@ -179,7 +180,7 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
                       )
                   }
                 ),
-              default: () => '删除'
+              default: () => $t('condor.common.delete')
             }
           )
       }

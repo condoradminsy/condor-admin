@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { $t } from '@/locales';
+
 defineOptions({
   name: 'CondorModal'
 });
@@ -18,8 +20,8 @@ const props = withDefaults(
     isDraggable: true,
     width: '800px',
     height: '',
-    cancelText: '取消',
-    subBtuText: '确定',
+    cancelText: $t('common.cancel'),
+    subBtuText: $t('common.confirm'),
     title: '',
     showAction: true,
     customClass: 'condor-modal'

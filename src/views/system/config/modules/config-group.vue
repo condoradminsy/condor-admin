@@ -2,6 +2,8 @@
 import { ref } from 'vue';
 import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
+import { $t } from '@/locales';
+
 const themeStore = useThemeStore();
 const groupRef = ref();
 const activeId = ref(0);
@@ -39,13 +41,31 @@ getGroupList();
 const groupColumns = [
   {
     key: 'name',
-    title: '分组名称',
-    rules: [{ required: true, message: '分组名称不能为空' }]
+    title() {
+      return $t('system.config.name');
+    },
+    rules: [
+      {
+        required: true,
+        message() {
+          return $t('system.config.name_required');
+        }
+      }
+    ]
   },
   {
     key: 'code',
-    title: '分组标识',
-    rules: [{ required: true, message: '分组标识不能为空' }],
+    title() {
+      return $t('system.config.code');
+    },
+    rules: [
+      {
+        required: true,
+        message() {
+          return $t('system.config.code_required');
+        }
+      }
+    ],
     component: {
       props: {
         allowInput: (value: string) => !value || /^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)
@@ -54,7 +74,9 @@ const groupColumns = [
   },
   {
     key: 'remark',
-    title: '备注'
+    title() {
+      return $t('system.config.remark');
+    }
   }
 ];
 
@@ -67,7 +89,7 @@ const edit = (row: any) => {
   groupRef.value.setForm(row, 'id');
   groupRef.value.open({
     type: 'edit',
-    title: '编辑分组',
+    title: $t('system.config.update_group'),
     row
   });
 };
@@ -92,7 +114,7 @@ const toDel = (id: number) => {
 
 <template>
   <div class="flex items-center justify-between p-2">
-    <div>配置分组</div>
+    <div>{{ $t('system.config.config_group') }}</div>
     <!-- eslint-disable -->
     <NTooltip style="padding: 5px 8px">
       <template #trigger>
@@ -100,14 +122,14 @@ const toDel = (id: number) => {
           size="small"
           circle
           type="primary"
-          @click="groupRef.open({ type: 'add', title: '添加分组' })"
+          @click="groupRef.open({ type: 'add', title: $t('system.config.add_group') })"
         >
           <icon-material-symbols-add-2
             :font-size="16"
           ></icon-material-symbols-add-2>
         </NButton>
       </template>
-      <div class="text-xs">添加分组</div>
+      <div class="text-xs">{{ $t('system.config.add_group') }}</div>
     </NTooltip>
   </div>
   <div
@@ -145,7 +167,7 @@ const toDel = (id: number) => {
             ></icon-material-symbols-delete-outline>
           </NButton>
         </template>
-        <div class="text-xs">确认删除分组嘛？</div>
+        <div class="text-xs">{{ $t('system.config.delete_group_tips') }}</div>
       </NPopconfirm>
     </div>
   </div>

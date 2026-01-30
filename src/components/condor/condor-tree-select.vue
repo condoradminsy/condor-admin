@@ -13,7 +13,6 @@ const props = withDefaults(
     multiple?: boolean;
     checkable?: boolean;
     cascade?: boolean;
-    placeholder?: any;
     labelField?: string;
     keyField?: string;
     param?: any;
@@ -24,7 +23,6 @@ const props = withDefaults(
     multiple: false,
     checkable: false,
     cascade: false,
-    placeholder: '请选择',
     labelField: 'name',
     keyField: 'id',
     param: () => ({})
@@ -68,7 +66,6 @@ getData();
     :options="treeList"
     :checkable="props.checkable"
     :cascade="props.cascade"
-    :placeholder="props.placeholder"
     :key-field="props.keyField"
     :label-field="props.labelField"
   ></NTreeSelect>

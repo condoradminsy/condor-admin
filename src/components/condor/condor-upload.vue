@@ -150,9 +150,9 @@ const renderIcon = () => {
           }"
           @click.stop="spaceRef.open()"
         >
-          <div class="h-full w-full flex items-center justify-center text-xs">选择</div>
+          <div class="h-full w-full flex items-center justify-center text-xs">{{ $t('condor.common.select') }}</div>
         </div>
-        <div class="h-full w-full flex items-center justify-center">上传</div>
+        <div class="upload h-full w-full flex items-center justify-center">{{ $t('condor.common.upload') }}</div>
       </div>
     </NUpload>
     <CondorUploadSpace ref="spaceRef" :max="props.max" @on-select="onSelect"></CondorUploadSpace>
@@ -160,14 +160,24 @@ const renderIcon = () => {
 </template>
 
 <style lang="scss" scoped>
-.select-btn {
-  border: 1px dashed #999999;
-  border-top: none;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
+.parent {
+  .select-btn {
+    border: 1px dashed #999999;
+    border-top: none;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    &:hover {
+      background-color: var(--bg-select-coloe);
+      border-color: var(--select-color);
+    }
+  }
+  .upload {
+    transition: all 0.1s ease-in-out;
+  }
   &:hover {
-    background-color: var(--bg-select-coloe);
-    border-color: var(--select-color);
+    .upload {
+      padding-top: 15px;
+    }
   }
 }
 </style>

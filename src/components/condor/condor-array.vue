@@ -14,7 +14,7 @@ const props = withDefaults(
   {
     header: true,
     keys: () => ['label', 'value'],
-    labels: () => ['键', '值']
+    labels: () => ['condor.common.key', 'condor.common.value']
   }
 );
 // 绑定关系
@@ -78,7 +78,7 @@ function del(index: number) {
   <div class="dx-block-list">
     <div v-if="props.header" class="flex justify-between">
       <NGrid x-gap="12" :cols="props.labels.length" class="mb-2">
-        <NGi v-for="(title, key) in props.labels" :key="key">{{ title }}</NGi>
+        <NGi v-for="(title, key) in props.labels" :key="key">{{ $t(title) }}</NGi>
       </NGrid>
       <div class="right pl-3"></div>
     </div>
@@ -86,7 +86,7 @@ function del(index: number) {
       <div v-for="(element, index) in internal" :key="index" class="mb-2 flex justify-between">
         <NGrid x-gap="12" :cols="props.keys.length">
           <NGi v-for="(row, rowIndex) in props.keys" :key="rowIndex">
-            <NInput v-model:value="element[row]" type="text" placeholder="请输入" />
+            <NInput v-model:value="element[row]" type="text" />
           </NGi>
         </NGrid>
         <div class="right flex items-center justify-center pl-3">
@@ -102,7 +102,7 @@ function del(index: number) {
     <div class="flex justify-end">
       <NButton type="primary" size="small" @click="add">
         <icon-material-symbols-add :font-size="17"></icon-material-symbols-add>
-        <span>追加</span>
+        <span>{{ $t('condor.common.append') }}</span>
       </NButton>
     </div>
   </div>

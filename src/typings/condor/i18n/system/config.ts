@@ -1,0 +1,29 @@
+export interface SystemConfigSchema {
+  key: string;
+  key_required: string;
+  title: string;
+  title_required: string;
+  value: string;
+  type: string;
+  type_required: string;
+  dict_type: string;
+  dict_type_required: string;
+  dict_code: string;
+  dict_code_required: string;
+  is_visible: string;
+  weigh: string;
+  tips: string;
+  add_config: string;
+  update_config: string;
+  delete_config_tips: string;
+  save_config: string;
+  name: string;
+  name_required: string;
+  code: string;
+  code_required: string;
+  remark: string;
+  update_group: string;
+  add_group: string;
+  config_group: string;
+  delete_group_tips: string;
+}

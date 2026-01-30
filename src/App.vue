@@ -3,15 +3,11 @@ import { computed } from 'vue';
 import { NConfigProvider, darkTheme } from 'naive-ui';
 import type { WatermarkProps } from 'naive-ui';
 import { useAppStore } from './store/modules/app';
-import { useDictStore } from './store/modules/dict';
 import { useThemeStore } from './store/modules/theme';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
-import { useSse } from './utils/sse';
 defineOptions({
   name: 'App'
 });
-useDictStore();
-
 const appStore = useAppStore();
 const themeStore = useThemeStore();
 const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
@@ -38,9 +34,6 @@ const watermarkProps = computed<WatermarkProps>(() => {
     zIndex: 9999
   };
 });
-// 初始化SSE
-const { start } = useSse();
-start();
 </script>
 
 <template>

@@ -233,13 +233,13 @@ const local: App.I18n.Schema = {
     system: 'System',
     system_admin: 'Admin',
     system_config: 'Config',
-    'system_dict-type': 'Dict Type',
+    'system_dict-type': 'Dict Manage',
     system_menu: 'Menu',
     system_role: 'Role',
     system_attachment: 'Attachment',
     system_crontab: 'Crontab',
     system_crud: 'Crud',
-    system_test: 'Test',
+    system_test: 'Crud Test',
     'system_admin-log': 'Admin Log',
     'system_login-log': 'Login Log'
   },
@@ -365,7 +365,47 @@ const local: App.I18n.Schema = {
     }
   },
   condor: {
-    Operation: 'Operation'
+    common: {
+      permission: 'Permission',
+      key: 'Key',
+      value: 'Value',
+      append: 'Append',
+      add: 'Add',
+      edit: 'Edit',
+      delete: 'Delete',
+      expand: 'Expand',
+      collapse: 'Collapse',
+      no_data_available: 'No data available',
+      export: 'Export',
+      select: 'Select',
+      upload: 'Upload',
+      encryption_error: 'Encryption error',
+      createtime: 'Create Time',
+      updatetime: 'Update Time',
+      status: 'Status'
+    },
+    component: {
+      group: 'Group',
+      edit_group: 'Edit Group',
+      add_group: 'Add Group',
+      you_want_to_delete_the_group: 'Are you sure you want to delete the group?',
+      upload_failed: 'Upload failed',
+      please_enter_the_content: 'Please enter the content',
+      confirm_delete_selected_data: 'Confirm delete selected data?',
+      table_list: 'Table / List',
+      column_setting: 'Column Setting',
+      please_select: 'Please select',
+      check_all_uncheck_all: 'Check All / Uncheck All',
+      expand_or_collapse: 'Expand / collapse',
+      parent_child_linkage: 'Cascading (Parent-Child)',
+      filter_data: 'Filter Data',
+      choose_image: 'Choose Image',
+      recent_month: 'Recent Month',
+      recent_week: 'Recent Week',
+      recent_three_month: 'Recent Three Month',
+      total_items: 'Total {total} items',
+      are_you_sure_you_want_to_delete_this_record: 'Are you sure you want to delete this record?'
+    }
   }
 };
 

@@ -1,0 +1,33 @@
+export interface SystemCrontabSchema {
+  name: string;
+  type: string;
+  target: string;
+  cron_value: string;
+  params: string;
+  remark: string;
+  run_once: string;
+  crontab_log: string;
+  exception_info: string;
+  successful: string;
+  failure: string;
+  every_day: string;
+  every_hour: string;
+  n_hour: string;
+  n_minute: string;
+  n_second: string;
+  every_week: string;
+  every_month: string;
+  every_year: string;
+  monday: string;
+  tuesday: string;
+  wednesday: string;
+  thursday: string;
+  friday: string;
+  saturday: string;
+  sunday: string;
+  month: string;
+  day: string;
+  hour: string;
+  minute: string;
+  second: string;
+}

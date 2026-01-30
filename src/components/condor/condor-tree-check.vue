@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { request } from '@/service/request';
+import { $t } from '@/locales';
 defineOptions({
   name: 'CondorTreeCheck'
 });
@@ -26,7 +27,7 @@ const props = withDefaults(
     checkStrategy: 'all',
     multiple: false,
     checkable: false,
-    placeholder: '请选择',
+    placeholder: $t('condor.component.please_select'),
     labelField: 'name',
     keyField: 'id',
     format: 'string',
@@ -39,7 +40,7 @@ const props = withDefaults(
   }
 );
 const defaultExpandAll = ref(true);
-const cascade = ref(true);
+const cascade = ref(false);
 const checkedAll = ref(false);
 const pattern = ref('');
 const treeList = ref([]);
@@ -106,13 +107,17 @@ getData();
 <template>
   <div>
     <div class="flex items-center space-x-5">
-      <NCheckbox v-model:checked="defaultExpandAll" label="折叠/展开" />
-      <NCheckbox v-model:checked="checkedAll" label="全选/全不选" @update:checked="updateChecked" />
-      <NCheckbox v-model:checked="cascade" label="父子联动" />
+      <NCheckbox v-model:checked="defaultExpandAll" :label="$t('condor.component.expand_or_collapse')" />
+      <NCheckbox
+        v-model:checked="checkedAll"
+        :label="$t('condor.component.check_all_uncheck_all')"
+        @update:checked="updateChecked"
+      />
+      <NCheckbox v-model:checked="cascade" :label="$t('condor.component.parent_child_linkage')" />
     </div>
     <div class="mt-2 border-2 rounded-md p-1">
       <div class="p-2">
-        <NInput v-model:value="pattern" clearable placeholder="过滤数据" />
+        <NInput v-model:value="pattern" clearable :placeholder="$t('condor.component.filter_data')" />
       </div>
       <NTree
         v-model:checked-keys="value"

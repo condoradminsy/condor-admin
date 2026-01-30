@@ -5,6 +5,8 @@ import { Icon } from '@iconify/vue';
 import { fetchUpload } from '@/service/api';
 import { getBaseUrl } from '@/service/request/shared';
 import { useDictStore } from '@/store/modules/dict';
+import { $t } from '@/locales';
+
 const { baseURL } = getBaseUrl();
 const dictStore = useDictStore();
 const header = computed<Condor.Table.Header>(() => {
@@ -33,7 +35,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'type_id',
-      title: '分组',
+      title() {
+        return $t('system.attachment.type');
+      },
       operator: false,
       render(row) {
         return row.type_name || '未分组';
@@ -41,7 +45,9 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'url',
-      title: '文件',
+      title() {
+        return $t('system.attachment.url');
+      },
       operator: false,
       width: 60,
       render(row) {
@@ -86,19 +92,27 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'storage',
-      title: '储存位置'
+      title() {
+        return $t('system.attachment.storage');
+      },
+      operator: 'like'
     },
     {
       key: 'filename',
-      title: '文件名',
+      title() {
+        return $t('system.attachment.filename');
+      },
       width: 150,
+      operator: 'like',
       ellipsis: {
         tooltip: true
       }
     },
     {
       key: 'filesize',
-      title: '文件大小',
+      title() {
+        return $t('system.attachment.filesize');
+      },
       operator: false,
       render(row) {
         const val = row.filesize / 1024;
@@ -107,12 +121,16 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'type',
-      title: '类型',
+      title() {
+        return $t('system.attachment.type');
+      },
       operator: false
     },
     {
       key: 'mimetype',
-      title: 'mime类型',
+      title() {
+        return $t('system.attachment.mimetype');
+      },
       operator: false,
       ellipsis: {
         tooltip: true
@@ -121,13 +139,17 @@ const config = ref<Condor.Table.Config>({
     },
     {
       key: 'createtime',
-      title: '创建时间',
+      title() {
+        return $t('condor.common.createtime');
+      },
       form: false,
       width: 180
     },
     {
       type: 'operate',
-      title: '操作',
+      title() {
+        return $t('common.operate');
+      },
       width: 100,
       key: 'operation',
       buttons: ['del']
@@ -164,7 +186,7 @@ const buttons: any = [
         }
       },
       {
-        default: () => '上传文件'
+        default: () => $t('system.attachment.upload')
       }
     );
   }
