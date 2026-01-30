@@ -34,13 +34,14 @@ const loaded = new Set<string>();
 // 加载页面国际化
 export async function loadPageLocale(page: string) {
   try {
-    if (!page || page === '/home' || page === '/system/crud') return;
+    if (!page) return;
     const str = page.replace(/^\/+|\/+$/g, '');
     if (loaded.has(str)) return;
-    const condorMessages = await import(
-      /* @vite-ignore */
-      `./condor/${str}/index.ts`
-    );
+    const modules = import.meta.glob<{ default: Record<string, any> }>('./condor/**/index.ts');
+    const loader = modules[`./condor/${str}/index.ts`];
+    if (!loader) return;
+    const condorMessages = await loader();
+    if (!condorMessages) return;
     Object.keys(condorMessages.default).forEach(key => {
       const messageData = condorMessages.default[key];
       // 根据 page 的路径构建嵌套结构
