@@ -7,6 +7,7 @@ import { VueDraggable } from 'vue-draggable-plus';
 import { Icon } from '@iconify/vue';
 import { transformColorWithOpacity } from '@sa/color';
 import { useDictStore } from '@/store/modules/dict';
+import { useAuthStore } from '@/store/modules/auth';
 import { useTable } from '@/hooks/condor/table';
 import { useForm } from '@/hooks/condor/form';
 import { useColumns } from '@/hooks/condor/column';
@@ -67,6 +68,7 @@ const props = withDefaults(
   }
 );
 const dictStore = useDictStore();
+const authStore = useAuthStore();
 const tableOrList = ref(props.isTable);
 const formModalRef = ref();
 const formRef = ref();
@@ -148,17 +150,21 @@ const renderOperate = (row: Record<string, any>, col: Condor.Table.Columns) => {
       const op = parts[0];
       const k = parts[1];
       const v = formatOperateValue(parts[2]);
-      if (op === 'edit') {
+      if (op === 'edit' && authStore.hasPermission(props.config.urls.edit)) {
         if (k === undefined || row[k] !== v) {
           buttons.push(getEditBtn(row));
         }
-      } else if (op === 'del') {
+      } else if (op === 'del' && authStore.hasPermission(props.config.urls.del)) {
         if (k === undefined || row[k] !== v) {
           buttons.push(getDelBtn(row));
         }
       }
     }
   });
+  if (buttons.length === 0) {
+    col.visible = false;
+    return '';
+  }
   return h(
     'div',
     {

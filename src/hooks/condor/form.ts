@@ -2,7 +2,6 @@ import { computed, h, inject, reactive, toRefs, watch } from 'vue';
 import { NButton, NTooltip } from 'naive-ui';
 import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
-import condorAuth from '@/components/condor/condor-auth.vue';
 import { $t } from '@/locales';
 export const useForm = ({ columns, urls, formRef, formModalRef, successFn }: any) => {
   const state = reactive<Condor.Form.StateProps>({
@@ -126,37 +125,28 @@ export const useForm = ({ columns, urls, formRef, formModalRef, successFn }: any
   // 获取编辑按钮
   const getEditBtn = (row: Record<string, any>) => {
     return h(
-      condorAuth,
+      NTooltip,
       {
-        permission: urls.edit
+        style: 'padding:5px 8px;',
+        contentClass: 'text-xs'
       },
       {
-        default: () =>
+        trigger: () =>
           h(
-            NTooltip,
+            NButton,
             {
-              style: 'padding:5px 8px;',
-              contentClass: 'text-xs'
+              type: 'primary',
+              size: 'small',
+              onClick: () => {
+                formModalRef.value?.open({ title: $t('condor.common.edit'), type: 'edit' });
+                setForm(row, 'id');
+              }
             },
             {
-              trigger: () =>
-                h(
-                  NButton,
-                  {
-                    type: 'primary',
-                    size: 'small',
-                    onClick: () => {
-                      formModalRef.value?.open({ title: $t('condor.common.edit'), type: 'edit' });
-                      setForm(row, 'id');
-                    }
-                  },
-                  {
-                    icon: () => h(Icon, { icon: 'ic:baseline-edit', width: 16 })
-                  }
-                ),
-              default: () => $t('condor.common.edit')
+              icon: () => h(Icon, { icon: 'ic:baseline-edit', width: 16 })
             }
-          )
+          ),
+        default: () => $t('condor.common.edit')
       }
     );
   };

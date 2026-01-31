@@ -4,11 +4,11 @@ import { $t } from '@/locales';
 
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/admin/index',
-    add: 'core/admin/add',
-    edit: 'core/admin/edit',
-    del: 'core/admin/del',
-    multi: 'core/admin/multi'
+    index: '/core/admin/index',
+    add: '/core/admin/add',
+    edit: '/core/admin/edit',
+    del: '/core/admin/del',
+    multi: '/core/admin/multi'
   },
   rowKey(row) {
     return row.id;

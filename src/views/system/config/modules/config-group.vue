@@ -13,13 +13,14 @@ const groupList = ref<
     name: string;
     code: string;
     remark: string;
+    is_sys: number;
   }[]
 >([]);
 const urls = {
-  add: 'core/config-group/add',
-  edit: 'core/config-group/edit',
-  del: 'core/config-group/del',
-  index: 'core/config-group/index'
+  add: '/core/config-group/add',
+  edit: '/core/config-group/edit',
+  del: '/core/config-group/del',
+  index: '/core/config-group/index'
 };
 const emit = defineEmits<{
   (e: 'update:active', value: any): void;
@@ -151,7 +152,7 @@ const toDel = (id: number) => {
       <span>{{ item.name }}</span>
       <span class="text-xs">({{ item.code }})</span>
     </div>
-    <div class="flex space-x-2">
+    <div class="flex space-x-2" v-if="item.is_sys!=1">
       <NButton size="small" text type="primary" @click="edit(item)">
         <icon-ic-baseline-edit :font-size="14"></icon-ic-baseline-edit>
       </NButton>

@@ -6,11 +6,11 @@ import DictData from './modules/dict-data.vue';
 const dictRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/dict-type/index',
-    add: 'core/dict-type/add',
-    edit: 'core/dict-type/edit',
-    del: 'core/dict-type/del',
-    multi: 'core/dict-type/multi'
+    index: '/core/dict-type/index',
+    add: '/core/dict-type/add',
+    edit: '/core/dict-type/edit',
+    del: '/core/dict-type/del',
+    multi: '/core/dict-type/multi'
   },
   rowKey(row) {
     return row.id;

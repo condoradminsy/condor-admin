@@ -215,16 +215,23 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     if (!permission) {
       return true;
     }
-    if (!userInfo.buttons || !userInfo.buttons.length) {
+    if (!Array.isArray(userInfo.buttons)) {
+      userInfo.buttons = [];
+    }
+    if (!Array.isArray(userInfo.roles)) {
+      userInfo.roles = [];
+    }
+    const roles = [...userInfo.buttons, ...userInfo.roles];
+    if (roles.length === 0) {
       return false;
     }
-    if (userInfo.buttons.includes('*')) {
+    if (roles.includes('*')) {
       return true;
     }
     if (Array.isArray(permission)) {
-      return permission.every(item => userInfo.buttons.includes(item));
+      return permission.every(item => roles.includes(item));
     }
-    return userInfo.buttons.includes(permission);
+    return roles.includes(permission);
   };
 
   return {

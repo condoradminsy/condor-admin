@@ -5,7 +5,7 @@ import { $t } from '@/locales';
 const modalRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/crontab-log/index'
+    index: '/core/crontab-log/index'
   },
   rowKey(row) {
     return row.id;

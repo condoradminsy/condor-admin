@@ -20,9 +20,9 @@ const type_id = ref(0);
 const tableRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/attachment/index',
-    add: 'core/attachment/upload',
-    del: 'core/attachment/del'
+    index: '/core/attachment/index',
+    add: '/core/attachment/upload',
+    del: '/core/attachment/del'
   },
   rowKey(row) {
     return row.id;

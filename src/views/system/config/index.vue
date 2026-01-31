@@ -20,11 +20,11 @@ const group = ref<{
 const layerFormRef = ref();
 const formRef = ref();
 const urls = {
-  add: 'core/config/add',
-  edit: 'core/config/edit',
-  del: 'core/config/del',
-  index: 'core/config/index',
-  save: 'core/config/save'
+  add: '/core/config/add',
+  edit: '/core/config/edit',
+  del: '/core/config/del',
+  index: '/core/config/index',
+  save: '/core/config/save'
 };
 const configColumns = [
   {
@@ -233,7 +233,10 @@ const fields = computed(() => {
         return {
           ...item,
           component: {
-            name: 'n-input-number'
+            name: 'n-input-number',
+            props: {
+              showButton: false
+            }
           }
         };
       case 'textarea':
@@ -389,7 +392,7 @@ const resetForm = () => {
             <span class="ml-[5px]">{{ $t('system.config.add_config') }}</span>
           </NButton>
         </div>
-        <NForm ref="formRef" label-placement="left" label-width="100px" :model="forms">
+        <NForm ref="formRef" label-placement="left" label-width="150px" :model="forms">
           <div
             v-for="(item, index) in fields"
             :key="index"
@@ -397,11 +400,12 @@ const resetForm = () => {
             :class="{ 'is-dark': themeStore.darkMode }"
           >
             <NFormItem :label="item.title" class="">
-              <div class="w-full flex items-start justify-between">
+              <div class="w-full flex items-start justify-between pr-2">
                 <div class="flex-1 pr-4">
                   <CondorFormItem v-model:value="forms[item.key]" :column="item" />
+                  <div v-if="item.tips" class="pt-1 text-xs text-gray-500">{{ item.tips }}</div>
                 </div>
-                <div class="flex space-x-2">
+                <div v-if="item.is_sys != 1" class="flex space-x-2">
                   <NButton size="small" text type="primary" @click="edit(item)">
                     <icon-ic-baseline-edit :font-size="14"></icon-ic-baseline-edit>
                   </NButton>

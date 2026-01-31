@@ -194,6 +194,15 @@ const config = ref<Condor.Table.Config>({
       form: false,
       operator: false,
       visible: false
+    },
+    {
+      type: 'operate',
+      title() {
+        return $t('common.operate');
+      },
+      width: 120,
+      key: 'operation',
+      buttons: ['edit', 'del']
     }
   ]
 });

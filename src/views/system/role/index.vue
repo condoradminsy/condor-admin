@@ -35,11 +35,11 @@ const columns = ref([
 ]);
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/role/index',
-    add: 'core/role/add',
-    edit: 'core/role/edit',
-    del: 'core/role/del',
-    multi: 'core/role/multi'
+    index: '/core/role/index',
+    add: '/core/role/add',
+    edit: '/core/role/edit',
+    del: '/core/role/del',
+    multi: '/core/role/multi'
   },
   rowKey(row) {
     return row.id;
@@ -50,7 +50,7 @@ const config = ref<Condor.Table.Config>({
       key: 'id',
       title: 'ID',
       disabled(row: any) {
-        return row.id === 1;
+        return row.is_sys === 1;
       }
     },
     {
@@ -132,8 +132,8 @@ const config = ref<Condor.Table.Config>({
             }
           );
         },
-        'edit:id:1',
-        'del:id:1'
+        'edit:is_sys:1',
+        'del:is_sys:1'
       ]
     }
   ]

@@ -9,8 +9,8 @@ hljs.registerLanguage('json', json);
 
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/admin-log/index',
-    del: 'core/admin-log/del'
+    index: '/core/admin-log/index',
+    del: '/core/admin-log/del'
   },
   rowKey(row) {
     return row.id;

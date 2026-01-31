@@ -31,10 +31,10 @@ const value = computed({
   }
 });
 const urls = {
-  add: 'core/attachment-type/add',
-  edit: 'core/attachment-type/edit',
-  del: 'core/attachment-type/del',
-  index: 'core/attachment-type/index'
+  add: '/core/attachment-type/add',
+  edit: '/core/attachment-type/edit',
+  del: '/core/attachment-type/del',
+  index: '/core/attachment-type/index'
 };
 const isLoading = ref(false);
 const list = ref<any>([]);

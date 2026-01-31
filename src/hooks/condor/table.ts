@@ -3,7 +3,6 @@ import { NButton, NPopconfirm, NSwitch, NTooltip } from 'naive-ui';
 import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
 import { useAuthStore } from '@/store/modules/auth';
-import condorAuth from '@/components/condor/condor-auth.vue';
 import { $t } from '@/locales';
 
 export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.UseTableProps) => {
@@ -145,44 +144,35 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
   // 获取删除按钮
   const getDelBtn = (row: Record<string, any>) => {
     return h(
-      condorAuth,
+      NTooltip,
       {
-        permission: urls.del
+        style: 'padding:5px 8px;',
+        contentClass: 'text-xs'
       },
       {
-        default: () =>
+        trigger: () =>
           h(
-            NTooltip,
+            NPopconfirm,
             {
-              style: 'padding:5px 8px;',
-              contentClass: 'text-xs'
+              size: 'small',
+              onPositiveClick: () => {
+                toDelete(row.id);
+              }
             },
             {
+              default: () => $t('condor.component.are_you_sure_you_want_to_delete_this_record'),
               trigger: () =>
                 h(
-                  NPopconfirm,
+                  NButton,
                   {
-                    size: 'small',
-                    onPositiveClick: () => {
-                      toDelete(row.id);
-                    }
+                    type: 'error',
+                    size: 'small'
                   },
-                  {
-                    default: () => $t('condor.component.are_you_sure_you_want_to_delete_this_record'),
-                    trigger: () =>
-                      h(
-                        NButton,
-                        {
-                          type: 'error',
-                          size: 'small'
-                        },
-                        { icon: () => h(Icon, { icon: 'material-symbols:delete-outline', width: 16 }) }
-                      )
-                  }
-                ),
-              default: () => $t('condor.common.delete')
+                  { icon: () => h(Icon, { icon: 'material-symbols:delete-outline', width: 16 }) }
+                )
             }
-          )
+          ),
+        default: () => $t('condor.common.delete')
       }
     );
   };

@@ -6,8 +6,8 @@ import { $t } from '@/locales';
 const modalRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/login-log/index',
-    del: 'core/login-log/del'
+    index: '/core/login-log/index',
+    del: '/core/login-log/del'
   },
   rowKey(row) {
     return row.id;

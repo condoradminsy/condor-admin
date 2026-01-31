@@ -9,11 +9,11 @@ const logRef = ref();
 const loadingMap = ref(new Map());
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/crontab/index',
-    add: 'core/crontab/add',
-    edit: 'core/crontab/edit',
-    del: 'core/crontab/del',
-    multi: 'core/crontab/multi'
+    index: '/core/crontab/index',
+    add: '/core/crontab/add',
+    edit: '/core/crontab/edit',
+    del: '/core/crontab/del',
+    multi: '/core/crontab/multi'
   },
   rowKey(row) {
     return row.id;

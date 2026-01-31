@@ -4,11 +4,11 @@ import { $t } from '@/locales';
 const modalRef = ref();
 const config = ref<Condor.Table.Config>({
   urls: {
-    index: 'core/dict-data/index',
-    add: 'core/dict-data/add',
-    edit: 'core/dict-data/edit',
-    del: 'core/dict-data/del',
-    multi: 'core/dict-data/multi'
+    index: '/core/dict-data/index',
+    add: '/core/dict-data/add',
+    edit: '/core/dict-data/edit',
+    del: '/core/dict-data/del',
+    multi: '/core/dict-data/multi'
   },
   rowKey(row) {
     return row.id;
