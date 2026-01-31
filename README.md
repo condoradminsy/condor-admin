@@ -56,7 +56,7 @@
 
 如有合作意向或项目咨询，请通过以下方式与我们联系：
 
-- **Email**: [1261502635@qq.com](mailto:1261502635@qq.com)
+- **Email**: [16659230@qq.com](mailto:16659230@qq.com)
 - **GitHub Issues**: 欢迎通过 [GitHub Issues](https://gitee.com/wbcondor/condor-admin/issues/new) 联系我们，进行初步的合作洽谈。
 
 
@@ -65,17 +65,25 @@
 
 ## 示例图片
 
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-01.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-02.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-03.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-04.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-05.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-06.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-07.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-08.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-09.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-10.png)
-![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-mobile.png)
+首页  
+![首页](https://condor.docs.weidm.top/backend/1769870795086.png)
+暗黑模式  
+![暗黑模式-配置管理](https://condor.docs.weidm.top/backend/1769870828565.png)
+附件管理  
+![附件管理](https://condor.docs.weidm.top/backend/1769870883390.png)
+CRUD 代码生成  
+![CRUD 代码生成](https://condor.docs.weidm.top/backend/1769870948447.png)
+菜单管理  
+![菜单管理](https://condor.docs.weidm.top/backend/1769870982331.png)
+角色管理  
+![角色管理](https://condor.docs.weidm.top/backend/1769871006482.png)
+英文切换-管理员列表
+![英文切换-管理员列表](https://condor.docs.weidm.top/backend/1769871057959.png)
+操作日志
+![操作日志](https://condor.docs.weidm.top/backend/1769871176731.png)
+登录界面
+![登录界面](https://condor.docs.weidm.top/backend/1769871225412.png)
+
 
 
 ## 使用
@@ -136,16 +144,11 @@ pnpm build
 | --- | --- | --- | --- | --- |
 | not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
 
-## 开源作者
+## 开发作者
 
-[Soybean](https://github.com/honghuangdc)
+[wbcondor](https://gitee.com/wbcondor)
 
-
-
-## Star 趋势
-
-[![Star History Chart](https://api.star-history.com/svg?repos=soybeanjs/soybean-admin&type=Date)](https://star-history.com/#soybeanjs/soybean-admin&Date)
 
 ## 开源协议
 
-项目基于 [MIT © 2021 Soybean](./LICENSE) 协议，仅供学习参考，商业使用请保留作者版权信息，作者不保证也不承担任何软件的使用风险。
+项目基于 [MIT © 2026 wbcondor](./LICENSE) 协议，仅供学习参考，商业使用请保留作者版权信息，作者不保证也不承担任何软件的使用风险。
