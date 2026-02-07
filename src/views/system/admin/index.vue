@@ -86,7 +86,7 @@ const config = ref<Condor.Table.Config>({
         return $t('system.admin.logintime');
       },
       operator: false,
-      formatter: 'datetime',
+      render: 'datetime',
       form: false
     },
     {

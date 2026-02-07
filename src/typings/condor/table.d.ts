@@ -20,7 +20,7 @@ declare namespace Condor {
       resizable?: boolean;
       ellipsis?: boolean | { showTitle?: boolean; tooltip?: boolean };
       type?: 'selection' | 'expand' | 'operate';
-      render?: (row: any) => any;
+      render?: string | ((row: any) => any);
       // 自定义属性
       [key: string]: any;
     }

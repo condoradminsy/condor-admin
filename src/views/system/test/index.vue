@@ -79,7 +79,6 @@ const config = ref<Condor.Table.Config>({
       },
       key: 'images',
       operator: false,
-      visible: false,
       component: {
         name: 'condor-upload',
         props: {
@@ -158,6 +157,7 @@ const config = ref<Condor.Table.Config>({
       },
       key: 'activitytime',
       operator: 'between',
+      render: 'datetime',
       component: {
         name: 'n-date-picker',
         props: {
@@ -171,6 +171,7 @@ const config = ref<Condor.Table.Config>({
       },
       key: 'refreshtime',
       operator: 'between',
+      render: 'datetime',
       component: {
         name: 'n-date-picker',
         props: {

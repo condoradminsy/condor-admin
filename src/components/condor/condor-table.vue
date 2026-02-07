@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { computed, h, isVNode, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { NButton, NTag } from 'naive-ui';
+import { NButton, NImage, NTag } from 'naive-ui';
 import dayjs from 'dayjs';
 import { VueDraggable } from 'vue-draggable-plus';
 import { Icon } from '@iconify/vue';
 import { transformColorWithOpacity } from '@sa/color';
+import { getBaseUrl } from '@/service/request/shared';
 import { useDictStore } from '@/store/modules/dict';
 import { useAuthStore } from '@/store/modules/auth';
 import { useTable } from '@/hooks/condor/table';
@@ -67,6 +68,7 @@ const props = withDefaults(
     initSearchParams: () => ({})
   }
 );
+const { baseURL } = getBaseUrl();
 const dictStore = useDictStore();
 const authStore = useAuthStore();
 const tableOrList = ref(props.isTable);
@@ -173,6 +175,119 @@ const renderOperate = (row: Record<string, any>, col: Condor.Table.Columns) => {
     buttons
   );
 };
+// 字典列
+const renderDictColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
+  const dictList = dictStore.dictData[col.component.props.code] || [];
+  const info = dictList.find((item: any) => `${item.value}` === `${row[col.key]}`) || {};
+  const color = info?.color || '#18A058';
+  const bgColor = transformColorWithOpacity(color, 0.1);
+  return h(
+    NTag,
+    {
+      size: 'small',
+      color: {
+        color: bgColor,
+        textColor: color,
+        borderColor: color
+      }
+    },
+    {
+      default: () => info?.label || row[col.key] || ''
+    }
+  );
+};
+// 时间列
+const renderTimeColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
+  const tv = Number(row[col.key]);
+  if (Number.isNaN(tv)) {
+    return row[col.key];
+  }
+  if (!tv) {
+    return '';
+  }
+  return dayjs(tv.toString().length > 10 ? Number(tv) : tv * 1000).format(
+    col.formatter === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'
+  );
+};
+const typeMap: any = {
+  video: 'ion-film-outline',
+  audio: 'gridicons-audio',
+  txt: 'tabler-file-type-txt',
+  word: 'ep-document',
+  excel: 'mdi-microsoft-excel',
+  ppt: 'lsicon-file-ppt-filled',
+  pdf: 'lsicon-file-pdf-outline',
+  zip: 'hugeicons-zip-02',
+  other: 'solar-documents-bold'
+};
+// 根据后缀名判断类型
+const getTypeByExtension = (extension: string | undefined) => {
+  let type = 'other';
+  if (!extension) return type;
+  if (['mp4', 'avi', 'mov', '3gp', 'm4v'].includes(extension)) {
+    type = 'video';
+  } else if (['mp3', 'wav'].includes(extension)) {
+    type = 'audio';
+  } else if (['doc', 'docx'].includes(extension)) {
+    type = 'word';
+  } else if (['xls', 'xlsx'].includes(extension)) {
+    type = 'excel';
+  } else if (['ppt', 'pptx'].includes(extension)) {
+    type = 'ppt';
+  } else if (['pdf'].includes(extension)) {
+    type = 'pdf';
+  } else if (['zip', 'rar'].includes(extension)) {
+    type = 'zip';
+  } else if (['txt'].includes(extension)) {
+    type = 'txt';
+  } else if (['png', 'jpg', 'jpge', 'gif', 'bmp', 'svg', 'webp', 'ico'].includes(extension)) {
+    type = 'image';
+  }
+  return type;
+};
+// 附件列
+const renderUploadColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
+  let values = row[col.key];
+  if (!values) return '';
+  values = Array.isArray(values) ? values : values.split(',');
+  return h(
+    'div',
+    {
+      class: 'flex items-center justify-center space-x-2'
+    },
+    {
+      default: () =>
+        values.map((value: string) => {
+          const extension = value?.split('.').pop()?.toLowerCase();
+          const type = row.type || getTypeByExtension(extension);
+          if (type === 'image') {
+            return h(NImage, {
+              width: '50px',
+              height: '50px',
+              objectFit: 'contain',
+              src: value?.startsWith('http') ? value : `${baseURL}${value}`
+            });
+          }
+          return h(
+            'a',
+            {
+              class: 'flex justify-center items-center cursor-pointer',
+              href: value?.startsWith('http') ? value : `${baseURL}${value}`,
+              target: '_blank'
+            },
+            {
+              default: () => [
+                h(Icon, {
+                  icon: typeMap[type],
+                  class: 'text-3xl'
+                })
+              ]
+            }
+          );
+        })
+    }
+  );
+};
 // 表格列
 const tableColumns = computed<any>(() => {
   return columns.value
@@ -186,48 +301,23 @@ const tableColumns = computed<any>(() => {
         render = (row: any) => renderOperate(row, col);
       } else if (col.component?.name === 'n-switch' && col.render === undefined) {
         render = (row: any) => getSwitchBtn(row, col);
-      } else if (['datetime', 'date'].includes(col.formatter)) {
-        render = (row: any) => {
-          const tv = Number(row[col.key]);
-          if (Number.isNaN(tv)) {
-            return row[col.key];
-          }
-          if (!tv) {
-            return '';
-          }
-          return dayjs(tv.toString().length > 10 ? Number(tv) : tv * 1000).format(
-            col.formatter === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'
-          );
-        };
+      } else if (['datetime', 'date'].includes(col.render)) {
+        render = (row: any) => renderTimeColumn(row, col);
       } else if (
         ['condor-dict-radio', 'condor-dict-select'].includes(col.component?.name) &&
-        col.component.props?.code
+        col.component.props?.code &&
+        col.render === undefined
       ) {
-        render = (row: any) => {
-          const dictList = dictStore.dictData[col.component.props.code] || [];
-          const info = dictList.find((item: any) => `${item.value}` === `${row[col.key]}`) || {};
-          const color = info?.color || '#18A058';
-          const bgColor = transformColorWithOpacity(color, 0.1);
-          return h(
-            NTag,
-            {
-              size: 'small',
-              color: {
-                color: bgColor,
-                textColor: color,
-                borderColor: color
-              }
-            },
-            {
-              default: () => info?.label || row[col.key] || ''
-            }
-          );
-        };
+        render = (row: any) => renderDictColumn(row, col);
+      } else if ((col.component?.name === 'condor-upload' && col.render === undefined) || col.render === 'image') {
+        render = (row: any) => renderUploadColumn(row, col);
+      } else if (col.render !== undefined) {
+        render = col.render;
       }
       return {
         align: 'center',
-        render,
-        ...col
+        ...col,
+        render
       };
     });
 });

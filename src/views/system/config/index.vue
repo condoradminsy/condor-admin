@@ -195,6 +195,8 @@ const configColumns = [
     }
   }
 ];
+const testEmail = ref('');
+const loading = ref(false);
 const forms = ref<any>({});
 const configList = ref<any>([]);
 const getList = () => {
@@ -376,6 +378,29 @@ const resetForm = () => {
     forms.value[item.key] = item.type === 'number' ? Number(item.value) : item.value;
   });
 };
+// 测试邮件发送
+const testEmailSend = () => {
+  if (!testEmail.value) {
+    window.$message?.error($t('system.config.test_email_required'));
+    return;
+  }
+  loading.value = true;
+  request({
+    url: '/core/config/send-test-email',
+    method: 'POST',
+    data: {
+      email: testEmail.value
+    }
+  })
+    .then(({ error, response }) => {
+      if (!error) {
+        window.$message?.success(response.data.msg);
+      }
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
 </script>
 
 <template>
@@ -422,9 +447,24 @@ const resetForm = () => {
             </NFormItem>
           </div>
         </NForm>
-        <div class="flex items-center justify-end pb-5 pr-3 space-x-2" :class="{ 'pt-4': !fields.length }">
-          <NButton @click="resetForm">{{ $t('common.reset') }}</NButton>
-          <NButton type="primary" @click="submit">{{ $t('system.config.save_config') }}</NButton>
+        <div
+          class="flex items-center px-3 pb-5"
+          :class="{
+            'pt-4': !fields.length,
+            'justify-between': group.code === 'email_config',
+            'justify-end': group.code !== 'email_config'
+          }"
+        >
+          <div v-if="group.code === 'email_config'" class="w-1/2 flex items-center pl-5 space-x-2">
+            <NInput v-model:value="testEmail" :placeholder="$t('system.config.test_email')" />
+            <NButton type="primary" :loading="loading" @click="testEmailSend">
+              {{ $t('system.config.test_email_send') }}
+            </NButton>
+          </div>
+          <div class="flex items-center space-x-2">
+            <NButton @click="resetForm">{{ $t('common.reset') }}</NButton>
+            <NButton type="primary" @click="submit">{{ $t('system.config.save_config') }}</NButton>
+          </div>
         </div>
       </NGridItem>
     </NGrid>

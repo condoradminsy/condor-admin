@@ -3,7 +3,8 @@ import { useRoute } from 'vue-router';
 import { defineStore } from 'pinia';
 import { useLoading } from '@sa/hooks';
 import JSEncrypt from 'jsencrypt';
-import { fetchGetCaptcha, fetchGetPublicKey, fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { fetchGetPublicKey, fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { useCaptchaStore } from '@/store/modules/captcha';
 import { useRouterPush } from '@/hooks/common/router';
 import { useSse } from '@/hooks/condor/sse';
 import { localStg } from '@/utils/storage';
@@ -23,8 +24,6 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const { loading: loginLoading, startLoading, endLoading } = useLoading();
 
   const token = ref(getToken());
-
-  const captchaUrl = ref<string | undefined>('');
 
   const userInfo: Api.Auth.UserInfo = reactive({
     userId: '',
@@ -48,7 +47,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
   // 字典
   const dictStore = useDictStore();
-
+  const captchaStore = useCaptchaStore();
   /** Reset auth store */
   async function resetStore() {
     recordUserId();
@@ -63,7 +62,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
     tabStore.cacheTabs();
     routeStore.resetStore();
-    getCaptcha();
+    captchaStore.getCaptcha();
   }
 
   /** Record the user ID of the previous login session Used to compare with the current user ID on next login */
@@ -205,11 +204,6 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     }
   }
 
-  async function getCaptcha() {
-    const res = await fetchGetCaptcha();
-    captchaUrl.value = res.data?.captcha;
-  }
-
   // 权限判断
   const hasPermission = (permission: string | string[] | undefined) => {
     if (!permission) {
@@ -243,8 +237,6 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     resetStore,
     login,
     initUserInfo,
-    captchaUrl,
-    getCaptcha,
     hasPermission
   };
 });

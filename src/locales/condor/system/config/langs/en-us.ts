@@ -26,7 +26,10 @@ const local: SystemConfigSchema = {
   update_group: 'Update Group',
   add_group: 'Add Group',
   config_group: 'Config Group',
-  delete_group_tips: 'Are you sure you want to delete this group?'
+  delete_group_tips: 'Are you sure you want to delete this group?',
+  test_email: 'Test Email',
+  test_email_send: 'Send Test Email',
+  test_email_required: 'Please enter the email address to test'
 };
 
 export default local;

@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { computed, h, provide, ref } from 'vue';
-import { NButton, NImage } from 'naive-ui';
-import { Icon } from '@iconify/vue';
+import { NButton } from 'naive-ui';
 import { fetchUpload } from '@/service/api';
-import { getBaseUrl } from '@/service/request/shared';
 import { useDictStore } from '@/store/modules/dict';
 import { $t } from '@/locales';
 
-const { baseURL } = getBaseUrl();
 const dictStore = useDictStore();
 const header = computed<Condor.Table.Header>(() => {
   return {
@@ -50,45 +47,7 @@ const config = ref<Condor.Table.Config>({
       },
       operator: false,
       width: 60,
-      render(row) {
-        const typeMap: any = {
-          video: 'ion-film-outline',
-          audio: 'gridicons-audio',
-          txt: 'tabler-file-type-txt',
-          word: 'ep-document',
-          excel: 'mdi-microsoft-excel',
-          ppt: 'lsicon-file-ppt-filled',
-          pdf: 'lsicon-file-pdf-outline',
-          zip: 'hugeicons-zip-02',
-          other: 'solar-documents-bold'
-        };
-        switch (row.type) {
-          case 'image':
-            return h(NImage, {
-              width: '50px',
-              height: '50px',
-              objectFit: 'contain',
-              src: row.url.startsWith('http') ? row.url : `${baseURL}${row.url}`
-            });
-          default:
-            return h(
-              'a',
-              {
-                class: 'flex justify-center items-center cursor-pointer',
-                href: row.url.startsWith('http') ? row.url : `${baseURL}${row.url}`,
-                target: '_blank'
-              },
-              {
-                default: () => [
-                  h(Icon, {
-                    icon: typeMap[row.type],
-                    class: 'text-3xl'
-                  })
-                ]
-              }
-            );
-        }
-      }
+      render: 'image'
     },
     {
       key: 'storage',

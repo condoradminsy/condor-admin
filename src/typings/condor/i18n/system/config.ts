@@ -26,4 +26,7 @@ export interface SystemConfigSchema {
   add_group: string;
   config_group: string;
   delete_group_tips: string;
+  test_email: string;
+  test_email_send: string;
+  test_email_required: string;
 }

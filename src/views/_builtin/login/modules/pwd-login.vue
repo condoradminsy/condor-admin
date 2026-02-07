@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue';
 import { useAuthStore } from '@/store/modules/auth';
+import { useCaptchaStore } from '@/store/modules/captcha';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -9,9 +10,10 @@ defineOptions({
 });
 
 const authStore = useAuthStore();
+const captchaStore = useCaptchaStore();
 const { formRef, validate } = useNaiveForm();
 
-authStore.getCaptcha();
+captchaStore.getCaptcha();
 
 interface FormModel {
   username: string;
@@ -58,7 +60,7 @@ async function handleSubmit() {
     <NFormItem path="code">
       <div class="w-full flex-y-center gap-16px">
         <NInput v-model:value="model.captcha" :placeholder="$t('page.login.common.codePlaceholder')" />
-        <img :src="authStore.captchaUrl" alt="Captcha" class="cursor-pointer" @click="authStore.getCaptcha" />
+        <img :src="captchaStore.captchaUrl" alt="Captcha" class="cursor-pointer" @click="captchaStore.getCaptcha" />
       </div>
     </NFormItem>
     <NSpace vertical :size="24">

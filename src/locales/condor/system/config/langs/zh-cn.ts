@@ -26,7 +26,10 @@ const local: SystemConfigSchema = {
   update_group: '编辑分组',
   add_group: '添加分组',
   config_group: '配置分组',
-  delete_group_tips: '确定要删除该分组吗？'
+  delete_group_tips: '确定要删除该分组吗？',
+  test_email: '测试邮件',
+  test_email_send: '发送测试邮件',
+  test_email_required: '测试邮件不能为空'
 };
 
 export default local;
