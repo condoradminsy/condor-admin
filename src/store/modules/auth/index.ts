@@ -12,7 +12,7 @@ import { SetupStoreId } from '@/enum';
 import { $t } from '@/locales';
 import { useRouteStore } from '../route';
 import { useTabStore } from '../tab';
-import { useDictStore } from '../dict';
+import { useCondorStore } from '../condor';
 import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
@@ -46,7 +46,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const { start, status } = useSse();
 
   // 字典
-  const dictStore = useDictStore();
+  const condorStore = useCondorStore();
   const captchaStore = useCaptchaStore();
   /** Reset auth store */
   async function resetStore() {
@@ -183,8 +183,8 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
         start();
       }
       // init dict
-      if (!dictStore.status) {
-        dictStore.init();
+      if (!condorStore.status) {
+        condorStore.initDict();
       }
       return true;
     }

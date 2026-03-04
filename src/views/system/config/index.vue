@@ -2,13 +2,13 @@
 import { computed, ref } from 'vue';
 import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
-import { $t } from '@/locales';
+import { $t, getValueByLocale } from '@/locales';
 import ConfigGroup from './modules/config-group.vue';
 
 const themeStore = useThemeStore();
 const group = ref<{
   id: number;
-  name: string;
+  name: any;
   code: string;
   remark: string;
 }>({
@@ -411,7 +411,7 @@ const testEmailSend = () => {
       </NGridItem>
       <NGridItem :span="5" class="my-3 border rounded-md dark:border-[#303133]">
         <div class="flex items-center justify-between border-b border-[#e0e0e0] px-3 py-2 dark:border-[#303133]">
-          <div>{{ group.name || '' }}</div>
+          <div>{{ getValueByLocale(group.name) }}</div>
           <NButton size="small" type="primary" @click="addConfig">
             <icon-material-symbols-add-2 :font-size="16"></icon-material-symbols-add-2>
             <span class="ml-[5px]">{{ $t('system.config.add_config') }}</span>
@@ -424,11 +424,11 @@ const testEmailSend = () => {
             class="config-form-item px-2 pt-2"
             :class="{ 'is-dark': themeStore.darkMode }"
           >
-            <NFormItem :label="item.title" class="">
+            <NFormItem :label="getValueByLocale(item.title)" class="">
               <div class="w-full flex items-start justify-between pr-2">
                 <div class="flex-1 pr-4">
                   <CondorFormItem v-model:value="forms[item.key]" :column="item" />
-                  <div v-if="item.tips" class="pt-1 text-xs text-gray-500">{{ item.tips }}</div>
+                  <div v-if="item.tips" class="pt-1 text-xs text-gray-500">{{ getValueByLocale(item.tips) }}</div>
                 </div>
                 <div v-if="item.is_sys != 1" class="flex space-x-2">
                   <NButton size="small" text type="primary" @click="edit(item)">
@@ -468,7 +468,13 @@ const testEmailSend = () => {
         </div>
       </NGridItem>
     </NGrid>
-    <CondorLayerForm ref="layerFormRef" :columns="configColumns" :urls="urls" @on-ok="getList" />
+    <CondorLayerForm
+      ref="layerFormRef"
+      :multilingual-fields="['title', 'tips']"
+      :columns="configColumns"
+      :urls="urls"
+      @on-ok="getList"
+    />
   </div>
 </template>
 

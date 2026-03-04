@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { request } from '@/service/request';
+import { $t, getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorTreeSelect'
 });
@@ -16,6 +17,7 @@ const props = withDefaults(
     labelField?: string;
     keyField?: string;
     param?: any;
+    i18nkey?: boolean;
   }>(),
   {
     checkStrategy: 'all',
@@ -25,6 +27,7 @@ const props = withDefaults(
     cascade: false,
     labelField: 'name',
     keyField: 'id',
+    i18nkey: false,
     param: () => ({})
   }
 );
@@ -49,7 +52,22 @@ const getData = () => {
     }
   }).then(({ error, data }) => {
     if (!error) {
-      treeList.value = data.list || data || [];
+      // i18nkey 为true时，将name字段翻译
+      const renderI18nKey = (list: any[]) => {
+        list.forEach(item => {
+          if (item.i18nkey) {
+            item[props.labelField] = $t(item.i18nkey);
+          } else if (typeof item[props.labelField] !== 'string') {
+            item[props.labelField] = getValueByLocale(item[props.labelField]);
+          }
+          if (item.children) {
+            renderI18nKey(item.children);
+          }
+        });
+        return list;
+      };
+      const list = data.list || data || [];
+      treeList.value = props.i18nkey ? renderI18nKey(list) : list;
     }
   });
 };

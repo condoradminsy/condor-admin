@@ -2,8 +2,11 @@ import { computed, h, inject, reactive, toRefs, watch } from 'vue';
 import { NButton, NTooltip } from 'naive-ui';
 import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
+import { useCondorStore } from '@/store/modules/condor';
 import { $t } from '@/locales';
-export const useForm = ({ columns, urls, formRef, formModalRef, successFn }: any) => {
+
+export const useForm = ({ columns, urls, multilingualFields, formRef, formModalRef, successFn }: any) => {
+  const condorStore = useCondorStore();
   const state = reactive<Condor.Form.StateProps>({
     // 加载状态
     isLoading: false,
@@ -36,6 +39,11 @@ export const useForm = ({ columns, urls, formRef, formModalRef, successFn }: any
         // 优先使用列中提供的 value，否则根据类型给默认值
         if (col.value !== undefined) f[col.key] = col.value;
         else if (col.type === 'switch') f[col.key] = false;
+        else if (multilingualFields?.includes(col.key))
+          f[col.key] = condorStore.languages.reduce((acc: any, il: any) => {
+            acc[il.key] = '';
+            return acc;
+          }, {});
         else f[col.key] = null;
       }
     });

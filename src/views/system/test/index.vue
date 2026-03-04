@@ -3,8 +3,19 @@ import { ref } from 'vue';
 import { $t } from '@/locales';
 
 const config = ref<Condor.Table.Config>({
+  multilingualFields: [
+    'name',
+    'target',
+    'title',
+    'content',
+    'image',
+    'images',
+    'attachfile',
+    'keywords',
+    'description'
+  ],
   urls: {
-    index: '/core/system-test/index',
+    index: '/core/system-test/selectpage',
     add: '/core/system-test/add',
     edit: '/core/system-test/edit',
     del: '/core/system-test/del'

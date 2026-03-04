@@ -47,6 +47,7 @@ declare namespace Condor {
       order?: string;
     }
     interface Config {
+      multilingualFields?: string[];
       urls: Urls;
       orderBy?: string;
       order?: string;

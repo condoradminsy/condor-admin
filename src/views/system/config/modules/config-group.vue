@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
-import { $t } from '@/locales';
+import { $t, getValueByLocale } from '@/locales';
 
 const themeStore = useThemeStore();
 const groupRef = ref();
@@ -10,7 +10,7 @@ const activeId = ref(0);
 const groupList = ref<
   {
     id: number;
-    name: string;
+    name: any;
     code: string;
     remark: string;
     is_sys: number;
@@ -123,19 +123,21 @@ const toDel = (id: number) => {
           size="small"
           circle
           type="primary"
-          @click="groupRef.open({ type: 'add', title: $t('system.config.add_group') })"
+          @click="
+            groupRef.open({ type: 'add', title: $t('system.config.add_group') })
+          "
         >
           <icon-material-symbols-add-2
             :font-size="16"
           ></icon-material-symbols-add-2>
         </NButton>
       </template>
-      <div class="text-xs">{{ $t('system.config.add_group') }}</div>
+      <div class="text-xs">{{ $t("system.config.add_group") }}</div>
     </NTooltip>
   </div>
   <div
-    class="flex items-center justify-between border-b py-2 pl-3 pr-2 dark:border-[#303133]" 
-    :class="{ 'border-t':index === 0 }"
+    class="flex items-center justify-between border-b py-2 pl-3 pr-2 dark:border-[#303133]"
+    :class="{ 'border-t': index === 0 }"
     v-for="(item, index) in groupList"
     :key="item.id"
   >
@@ -145,14 +147,14 @@ const toDel = (id: number) => {
       :class="{
         'border-[--text-color]': item.id === activeId,
         'border-white': !themeStore.darkMode && item.id !== activeId,
-        'border-[#303133]': themeStore.darkMode && item.id !== activeId
+        'border-[#303133]': themeStore.darkMode && item.id !== activeId,
       }"
       @click="selectGroup(item)"
     >
-      <span>{{ item.name }}</span>
+      <span>{{ getValueByLocale(item.name) }}</span>
       <span class="text-xs">({{ item.code }})</span>
     </div>
-    <div class="flex space-x-2" v-if="item.is_sys!=1">
+    <div class="flex space-x-2" v-if="item.is_sys != 1">
       <NButton size="small" text type="primary" @click="edit(item)">
         <icon-ic-baseline-edit :font-size="14"></icon-ic-baseline-edit>
       </NButton>
@@ -168,13 +170,14 @@ const toDel = (id: number) => {
             ></icon-material-symbols-delete-outline>
           </NButton>
         </template>
-        <div class="text-xs">{{ $t('system.config.delete_group_tips') }}</div>
+        <div class="text-xs">{{ $t("system.config.delete_group_tips") }}</div>
       </NPopconfirm>
     </div>
   </div>
   <!-- 分组表单 -->
   <CondorLayerForm
     ref="groupRef"
+    :multilingualFields="['name', 'remark']"
     :columns="groupColumns"
     :urls="urls"
     @on-ok="getGroupList"

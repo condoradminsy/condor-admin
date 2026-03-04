@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useDictStore } from '@/store/modules/dict';
+import { useCondorStore } from '@/store/modules/condor';
+import { getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorDictSelect'
 });
-const dictStore = useDictStore();
+const condorStore = useCondorStore();
 
 const props = withDefaults(
   defineProps<{
@@ -28,7 +29,7 @@ const emit = defineEmits<{
   (e: 'update:value', value: string | number | Array<string | number> | null | undefined): void;
 }>();
 
-type RawDictItem = { id?: string | number; label: string; value: any };
+type RawDictItem = { id?: string | number; label: any; value: any };
 type MappedDictItem = { label: string; value: string | number };
 
 /**
@@ -68,9 +69,9 @@ const value = computed<string | number | Array<string | number> | null | undefin
 
 /** 映射字典数据供 NSelect 使用（缓存计算） */
 const dictList = computed<MappedDictItem[]>(() => {
-  const raw = (dictStore.dictData?.[props.code] as RawDictItem[]) || [];
+  const raw = (condorStore.dictData?.[props.code] as RawDictItem[]) || [];
   return raw.map(item => ({
-    label: item.label,
+    label: getValueByLocale(item.label),
     value: props.type === 'number' ? Number(item.value) : `${item.value}`
   }));
 });

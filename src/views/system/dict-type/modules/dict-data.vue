@@ -3,6 +3,7 @@ import { provide, ref } from 'vue';
 import { $t } from '@/locales';
 const modalRef = ref();
 const config = ref<Condor.Table.Config>({
+  multilingualFields: ['label', 'remark'],
   urls: {
     index: '/core/dict-data/index',
     add: '/core/dict-data/add',

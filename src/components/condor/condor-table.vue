@@ -7,13 +7,13 @@ import { VueDraggable } from 'vue-draggable-plus';
 import { Icon } from '@iconify/vue';
 import { transformColorWithOpacity } from '@sa/color';
 import { getBaseUrl } from '@/service/request/shared';
-import { useDictStore } from '@/store/modules/dict';
+import { useCondorStore } from '@/store/modules/condor';
 import { useAuthStore } from '@/store/modules/auth';
 import { useTable } from '@/hooks/condor/table';
 import { useForm } from '@/hooks/condor/form';
 import { useColumns } from '@/hooks/condor/column';
 import { useXlsx } from '@/hooks/condor/xlsx';
-import { $t } from '@/locales';
+import { $t, getLocale, getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorTable'
 });
@@ -69,7 +69,7 @@ const props = withDefaults(
   }
 );
 const { baseURL } = getBaseUrl();
-const dictStore = useDictStore();
+const condorStore = useCondorStore();
 const authStore = useAuthStore();
 const tableOrList = ref(props.isTable);
 const formModalRef = ref();
@@ -118,11 +118,17 @@ const {
 // 表单
 const { form, rules, fields, setForm, hasCondition, submitForm, resetForm, getEditBtn } = useForm({
   columns,
+  multilingualFields: props.config.multilingualFields,
   urls: props.config.urls,
   formRef,
   formModalRef,
   successFn: getTableData
 });
+const currentLocale = ref(getLocale().toLocaleLowerCase());
+// 弹窗打开，更新当前语言
+const onOpenModal = () => {
+  currentLocale.value = getLocale().toLocaleLowerCase();
+};
 // 格式化操作列的值
 const formatOperateValue = (v: string) => {
   let parsedV: any = v;
@@ -177,7 +183,7 @@ const renderOperate = (row: Record<string, any>, col: Condor.Table.Columns) => {
 };
 // 字典列
 const renderDictColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
-  const dictList = dictStore.dictData[col.component.props.code] || [];
+  const dictList = condorStore.dictData[col.component.props.code] || [];
   const info = dictList.find((item: any) => `${item.value}` === `${row[col.key]}`) || {};
   const color = info?.color || '#18A058';
   const bgColor = transformColorWithOpacity(color, 0.1);
@@ -192,7 +198,7 @@ const renderDictColumn = (row: Record<string, any>, col: Condor.Table.Columns) =
       }
     },
     {
-      default: () => info?.label || row[col.key] || ''
+      default: () => getValueByLocale(info?.label || row[col.key])
     }
   );
 };
@@ -248,6 +254,9 @@ const getTypeByExtension = (extension: string | undefined) => {
 // 附件列
 const renderUploadColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
   let values = row[col.key];
+  if (props.config.multilingualFields?.length && props.config.multilingualFields.includes(col.key)) {
+    values = getValueByLocale(row[col.key]);
+  }
   if (!values) return '';
   values = Array.isArray(values) ? values : values.split(',');
   return h(
@@ -311,6 +320,8 @@ const tableColumns = computed<any>(() => {
         render = (row: any) => renderDictColumn(row, col);
       } else if ((col.component?.name === 'condor-upload' && col.render === undefined) || col.render === 'image') {
         render = (row: any) => renderUploadColumn(row, col);
+      } else if (props.config.multilingualFields?.length && props.config.multilingualFields.includes(col.key)) {
+        render = (row: any) => getValueByLocale(row[col.key]);
       } else if (col.render !== undefined) {
         render = col.render;
       }
@@ -354,7 +365,7 @@ onMounted(() => {
 });
 // 字典的值
 const getDictLabel = (code: string, value: any) => {
-  const dictList = dictStore.dictData[code] || [];
+  const dictList = condorStore.dictData[code] || [];
   const info = dictList.find((r: any) => `${r.value}` === `${value}`) || {};
   if (info?.label) {
     return info.label;
@@ -455,7 +466,15 @@ defineExpose({
               <icon-solar-refresh-bold class="text-18px" :class="{ 'animate-spin': isLoading }" />
             </NButton>
             <CondorAuth v-else-if="item === 'add'" :permission="props.config.urls.add">
-              <NButton type="primary" @click="formModalRef?.open({ title: $t('condor.common.add'), type: 'add' })">
+              <NButton
+                type="primary"
+                @click="
+                  formModalRef?.open({
+                    title: $t('condor.common.add'),
+                    type: 'add'
+                  })
+                "
+              >
                 <icon-material-symbols-add-2-rounded class="text-16px" />
                 <span class="ml-1">{{ $t('condor.common.add') }}</span>
               </NButton>
@@ -497,7 +516,7 @@ defineExpose({
                   </template>
                 </NButton>
               </template>
-              <span>{{ $t('condor.component.table_list') }}</span>
+              <span>{{ $t("condor.component.table_list") }}</span>
             </NTooltip>
             <!-- eslint-disable -->
             <NTooltip
@@ -552,7 +571,7 @@ defineExpose({
                   </NPopover>
                 </div>
               </template>
-              <span>{{ $t('condor.component.column_setting') }}</span>
+              <span>{{ $t("condor.component.column_setting") }}</span>
             </NTooltip>
             <!-- eslint-disable -->
             <NTooltip
@@ -567,7 +586,7 @@ defineExpose({
                   </template>
                 </NButton>
               </template>
-              <span>{{ $t('condor.common.export') }}</span>
+              <span>{{ $t("condor.common.export") }}</span>
             </NTooltip>
             <!-- eslint-disable -->
             <NTooltip
@@ -587,9 +606,12 @@ defineExpose({
                   </template>
                 </NButton>
               </template>
-              <span>{{ $t('common.search') }}</span>
+              <span>{{ $t("common.search") }}</span>
             </NTooltip>
-            <CondorVNode v-else-if="typeof item === 'function'" :render="item"></CondorVNode>
+            <CondorVNode
+              v-else-if="typeof item === 'function'"
+              :render="item"
+            ></CondorVNode>
           </template>
         </div>
       </slot>
@@ -630,7 +652,19 @@ defineExpose({
     </slot>
   </div>
   <slot name="form-modal">
-    <CondorModal ref="formModalRef" @on-ok="submitForm" @on-close="resetForm">
+    <CondorModal
+      ref="formModalRef"
+      :isMultilingual="
+        props.config.multilingualFields &&
+        props.config.multilingualFields.length > 0
+      "
+      @on-ok="submitForm"
+      @on-close="resetForm"
+      @on-open="onOpenModal"
+    >
+    <template #multilingual>
+      <CondorLang v-model:value="currentLocale"></CondorLang>
+    </template>
       <slot name="form">
         <NForm
           ref="formRef"
@@ -644,18 +678,49 @@ defineExpose({
               <NFormItemGi
                 v-if="hasCondition(item)"
                 :span="item.span || props.colSpan"
-                :label="typeof item.title === 'function' ? item.title(form) : item.title"
+                :label="
+                  typeof item.title === 'function'
+                    ? item.title(form)
+                    : item.title
+                "
                 :path="item.key"
               >
                 <slot :name="`form-item-${item.key}`" :form="form">
-                  <div class="w-full">
+                  <div
+                    class="w-full"
+                    v-if="props.config.multilingualFields?.includes(item.key)"
+                  >
+                    <CondorFormItem
+                      v-model:value="form[item.key][currentLocale]"
+                      :column="item"
+                    ></CondorFormItem>
+                    <div
+                      v-if="item.tips !== undefined"
+                      class="pt-1 text-xs text-gray-500"
+                    >
+                      <icon-ri-information-line class="inline-block" />
+                      <span class="ml-1">{{
+                        typeof item.tips === "function"
+                          ? item.tips(form)
+                          : item.tips
+                      }}</span>
+                    </div>
+                  </div>
+                  <div class="w-full" v-else>
                     <CondorFormItem
                       v-model:value="form[item.key]"
                       :column="item"
                     ></CondorFormItem>
-                    <div v-if="item.tips !== undefined" class="pt-1 text-xs text-gray-500">
+                    <div
+                      v-if="item.tips !== undefined"
+                      class="pt-1 text-xs text-gray-500"
+                    >
                       <icon-ri-information-line class="inline-block" />
-                      <span class="ml-1">{{ typeof item.tips === 'function' ? item.tips(form) : item.tips }}</span>
+                      <span class="ml-1">{{
+                        typeof item.tips === "function"
+                          ? item.tips(form)
+                          : item.tips
+                      }}</span>
                     </div>
                   </div>
                 </slot>

@@ -4,7 +4,8 @@ import { NInput } from 'naive-ui';
 import { transformColorWithOpacity } from '@sa/color';
 import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
-import { $t } from '@/locales';
+import { $t, getLocale, getValueByLocale } from '@/locales';
+import CondorLang from './condor-lang.vue';
 defineOptions({
   name: 'CondorAttachmentType'
 });
@@ -37,15 +38,13 @@ const urls = {
   index: '/core/attachment-type/index'
 };
 const isLoading = ref(false);
+const locale = ref(getLocale().toLocaleLowerCase());
 const list = ref<any>([]);
 const getList = () => {
   isLoading.value = true;
   request({
     url: urls.index,
-    method: 'post',
-    data: {
-      limit: 500
-    }
+    method: 'post'
   })
     .then(({ data, error }) => {
       if (!error) {
@@ -58,21 +57,33 @@ const getList = () => {
 };
 getList();
 const addOrEdit = (row: any) => {
-  const name = ref(row.name || null);
+  const name = ref({
+    ...row.name
+  });
   const d: any = window.$dialog?.create({
     title: row.id ? $t('condor.component.edit_group') : $t('condor.component.add_group'),
     content: () => {
       return h(
         'div',
         {
-          class: 'py-2'
+          class: 'py-4 flex items-center justify-between'
         },
         {
           default: () => [
             h(NInput, {
-              value: name.value,
+              value: name.value[locale.value],
+              class: 'mr-2',
               onUpdateValue: val => {
-                name.value = val;
+                name.value[locale.value] = val;
+              }
+            }),
+            h(CondorLang, {
+              value: locale.value,
+              onUpdateValue: (val: string) => {
+                if (!(val in name.value)) {
+                  name.value[val] = '';
+                }
+                locale.value = val;
               }
             })
           ]
@@ -161,7 +172,7 @@ const toDel = (id: number) => {
           class="mb-2 w-full flex items-center justify-between border rounded-sm px-2 py-1 dark:border-[#585757]"
         >
           <NRadio :value="item.id">
-            <span>{{ item.name }}</span>
+            <span>{{ getValueByLocale(item.name) }}</span>
           </NRadio>
           <div v-if="item.id" class="flex items-center space-x-2">
             <NButton size="small" text type="primary" @click="addOrEdit(item)">

@@ -3,7 +3,7 @@ import { h, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import { request } from '@/service/request';
 import { getBaseUrl } from '@/service/request/shared';
-import { useDictStore } from '@/store/modules/dict';
+import { useCondorStore } from '@/store/modules/condor';
 import { $t } from '@/locales';
 defineOptions({
   name: 'CondorUploadSpace'
@@ -17,7 +17,7 @@ const props = withDefaults(
   }
 );
 const { baseURL } = getBaseUrl();
-const dictStore = useDictStore();
+const condorStore = useCondorStore();
 const modalRef = ref();
 const imageList = ref<any>([]);
 const showRef = ref(false);
@@ -76,7 +76,7 @@ const selectType = (id: number) => {
 };
 
 const navChange = (index: number) => {
-  const row = dictStore.dictData.attachment_type[index];
+  const row = condorStore.dictData.attachment_type[index];
   params.value['a.type'] = row.value;
   params.value.page = 1;
   getList();
@@ -120,7 +120,7 @@ defineExpose({
         <CondorAttachmentType :value="params['a.type_id']" @update:value="selectType" />
       </NGridItem>
       <NGridItem :span="9" class="rounded-md">
-        <CondorNav :list="dictStore.dictData.attachment_type" @change="navChange"></CondorNav>
+        <CondorNav :list="condorStore.dictData.attachment_type" @change="navChange"></CondorNav>
         <div class="grid grid-cols-8 gap-[8px]">
           <div
             v-for="(item, index) in imageList"

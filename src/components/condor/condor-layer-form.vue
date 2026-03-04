@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useForm } from '@/hooks/condor/form';
-import { $t } from '@/locales';
+import { $t, getLocale } from '@/locales';
 
 defineOptions({
   name: 'CondorLayerForm'
@@ -16,6 +16,7 @@ const props = withDefaults(
     formLabelWidth?: string | number;
     colSpan?: number;
     urls: any;
+    multilingualFields?: string[];
   }>(),
   {
     isDraggable: true,
@@ -23,7 +24,8 @@ const props = withDefaults(
     cancelText: $t('common.cancel'),
     subBtuText: $t('common.confirm'),
     formLabelWidth: '100px',
-    colSpan: 24
+    colSpan: 24,
+    multilingualFields: () => []
   }
 );
 const formModalRef = ref();
@@ -33,9 +35,15 @@ const emit = defineEmits<{
   (e: 'onClose'): void;
 }>();
 
+const currentLocale = ref(getLocale().toLocaleLowerCase());
+// 弹窗打开，更新当前语言
+const onOpenModal = () => {
+  currentLocale.value = getLocale().toLocaleLowerCase();
+};
 const { form, rules, fields, hasCondition, submitForm, resetForm, setForm } = useForm({
   columns: computed(() => props.columns),
   urls: props.urls,
+  multilingualFields: props.multilingualFields,
   formRef,
   formModalRef,
   successFn: () => {
@@ -59,13 +67,18 @@ defineExpose({
 <template>
   <CondorModal
     ref="formModalRef"
+    :is-multilingual="props.multilingualFields && props.multilingualFields.length > 0"
     :is-draggable="props.isDraggable"
     :width="props.width"
     :cancel-text="props.cancelText"
     :sub-btu-text="props.subBtuText"
     @on-ok="submitForm"
     @on-close="onClose"
+    @on-open="onOpenModal"
   >
+    <template #multilingual>
+      <CondorLang v-model:value="currentLocale"></CondorLang>
+    </template>
     <slot name="form">
       <NForm ref="formRef" :model="form" :rules="rules" label-placement="left" :label-width="props.formLabelWidth">
         <NGrid :cols="24" :x-gap="24">
@@ -77,7 +90,14 @@ defineExpose({
               :path="item.key"
             >
               <slot :name="`form-${item.key}`">
-                <div class="w-full">
+                <div v-if="props.multilingualFields?.includes(item.key)" class="w-full">
+                  <CondorFormItem v-model:value="form[item.key][currentLocale]" :column="item"></CondorFormItem>
+                  <div v-if="item.tips" class="pt-1 text-xs text-gray-500">
+                    <icon-ri-information-line class="inline-block" />
+                    <span class="ml-1">{{ typeof item.tips === 'function' ? item.tips(form) : item.tips }}</span>
+                  </div>
+                </div>
+                <div v-else class="w-full">
                   <CondorFormItem v-model:value="form[item.key]" :column="item"></CondorFormItem>
                   <div v-if="item.tips" class="pt-1 text-xs text-gray-500">
                     <icon-ri-information-line class="inline-block" />

@@ -28,12 +28,14 @@ const columns = ref([
         url: 'core/menu/selectpage',
         labelField: 'title',
         multiple: true,
-        checkable: true
+        checkable: true,
+        i18nkey: true
       }
     }
   }
 ]);
 const config = ref<Condor.Table.Config>({
+  multilingualFields: ['name'],
   urls: {
     index: '/core/role/index',
     add: '/core/role/add',
@@ -62,7 +64,8 @@ const config = ref<Condor.Table.Config>({
       component: {
         name: 'condor-tree-select',
         props: {
-          url: 'core/role/selectpage'
+          url: 'core/role/selectpage',
+          i18nkey: true
         }
       },
       visible: false

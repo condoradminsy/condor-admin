@@ -1,14 +1,17 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { fetchGetDict } from '@/service/api/dict';
+import { fetchGetConfig, fetchGetDict } from '@/service/api/condor';
 import { SetupStoreId } from '@/enum';
 
-export const useDictStore = defineStore(SetupStoreId.Dict, () => {
+export const useCondorStore = defineStore(SetupStoreId.Condor, () => {
+  // 数据字典
   const dictData = ref<any>({});
-
+  // 数据字典加载状态
   const status = ref(false);
-
-  function init() {
+  // 语言
+  const languages = ref<any>([]);
+  // 初始化
+  function initDict() {
     fetchGetDict().then(({ error, data }) => {
       if (!error) {
         dictData.value = data.reduce((acc: any, cur: any) => {
@@ -20,9 +23,16 @@ export const useDictStore = defineStore(SetupStoreId.Dict, () => {
     });
   }
 
+  fetchGetConfig().then(({ error, data }) => {
+    if (!error) {
+      languages.value = data.languages;
+    }
+  });
+
   return {
     dictData,
     status,
-    init
+    initDict,
+    languages
   };
 });

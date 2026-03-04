@@ -2,11 +2,12 @@
 import { nextTick, onMounted, ref } from 'vue';
 import { transformColorWithOpacity } from '@sa/color';
 import { useThemeStore } from '@/store/modules/theme';
+import { getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorNav'
 });
 const props = defineProps<{
-  list: { label: string; value: string | number | boolean }[];
+  list: { label: any; value: string | number | boolean }[];
   index?: number;
 }>();
 const navRef = ref<HTMLElement | null>(null);
@@ -62,7 +63,7 @@ const changeNav = (index: number) => {
         class="text-grey-600 relative z-10 mr-2 cursor-pointer rounded-md px-[8px] py-[5px]"
         @click="changeNav(i)"
       >
-        {{ item.label }}
+        {{ getValueByLocale(item.label) }}
       </div>
     </div>
   </div>

@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useDictStore } from '@/store/modules/dict';
+import { useCondorStore } from '@/store/modules/condor';
+import { getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorDictRadio'
 });
-const dictStore = useDictStore();
+const condorStore = useCondorStore();
 
 /**
  * Props
@@ -41,17 +42,17 @@ const value = computed<string | number | null | undefined>({
   }
 });
 
-type RawDictItem = { id?: string | number; label: string; value: any };
+type RawDictItem = { id?: string | number; label: any; value: any };
 type MappedDictItem = { id?: string | number; label: string; value: string | number };
 
 /**
  * 以 code 为键从 store 中取出原始列表并映射为组件需要的项
  */
 const dictList = computed<MappedDictItem[]>(() => {
-  const raw = (dictStore.dictData?.[props.code] as RawDictItem[]) || [];
+  const raw = (condorStore.dictData?.[props.code] as RawDictItem[]) || [];
   return raw.map(item => ({
     id: item.id,
-    label: item.label,
+    label: getValueByLocale(item.label),
     value: props.type === 'number' ? Number(item.value) : `${item.value}`
   }));
 });

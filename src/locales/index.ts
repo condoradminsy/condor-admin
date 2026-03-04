@@ -29,6 +29,11 @@ export function getLocale(): App.I18n.LangType {
   return i18n.global.locale.value as App.I18n.LangType;
 }
 
+export function getValueByLocale(row: Record<string, any>) {
+  if (!row) return '';
+  return row[i18n.global.locale.value.toLocaleLowerCase()] || row['zh-cn'];
+}
+
 const loaded = new Set<string>();
 
 // 加载页面国际化

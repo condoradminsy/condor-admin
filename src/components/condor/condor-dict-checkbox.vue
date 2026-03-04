@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useDictStore } from '@/store/modules/dict';
+import { useCondorStore } from '@/store/modules/condor';
+import { getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorDictCheckbox'
 });
-const dictStore = useDictStore();
+const condorStore = useCondorStore();
 
 const props = withDefaults(
   defineProps<{
@@ -24,7 +25,7 @@ const emit = defineEmits<{
   (e: 'update:value', value: string | Array<string | number> | null | undefined): void;
 }>();
 
-type RawDictItem = { id?: string | number; label: string; value: any };
+type RawDictItem = { id?: string | number; label: any; value: any };
 type MappedDictItem = { id?: string | number; label: string; value: string | number };
 
 /**
@@ -56,10 +57,10 @@ const value = computed<Array<string | number> | null | undefined>({
 
 /** 映射字典数据供 NCheckboxGroup 使用（缓存计算） */
 const dictList = computed<MappedDictItem[]>(() => {
-  const raw = (dictStore.dictData?.[props.code] as RawDictItem[]) || [];
+  const raw = (condorStore.dictData?.[props.code] as RawDictItem[]) || [];
   return raw.map(item => ({
     id: item.id,
-    label: item.label,
+    label: getValueByLocale(item.label),
     value: props.type === 'number' ? Number(item.value) : `${item.value}`
   }));
 });

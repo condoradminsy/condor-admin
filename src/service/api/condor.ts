@@ -4,3 +4,6 @@ import { request } from '../request';
 export function fetchGetDict() {
   return request({ url: '/core/common/getDict' });
 }
+export function fetchGetConfig() {
+  return request({ url: '/core/common/getConfig' });
+}

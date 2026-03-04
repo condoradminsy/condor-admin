@@ -15,6 +15,7 @@ const props = withDefaults(
     height?: string | number;
     showAction?: boolean;
     customClass?: string;
+    isMultilingual?: boolean;
   }>(),
   {
     isDraggable: true,
@@ -24,7 +25,8 @@ const props = withDefaults(
     subBtuText: $t('common.confirm'),
     title: '',
     showAction: true,
-    customClass: 'condor-modal'
+    customClass: 'condor-modal',
+    isMultilingual: false
   }
 );
 const modalTitle = ref(props.title);
@@ -32,11 +34,11 @@ const modalType = ref('default');
 const emit = defineEmits<{
   (e: 'onOk', type: string): void;
   (e: 'onClose'): void;
+  (e: 'onOpen'): void;
 }>();
 
 const isModal = ref(false);
 const subLoading = ref(false);
-
 const getStyle = computed<any>(() => {
   const style = {
     width: '',
@@ -69,6 +71,7 @@ function open(options: any) {
     modalType.value = options.type;
   }
   isModal.value = true;
+  emit('onOpen');
 }
 
 function close() {
@@ -85,6 +88,7 @@ function handleSubmit() {
   subLoading.value = true;
   emit('onOk', modalType.value);
 }
+
 defineExpose({
   open,
   close,
@@ -103,8 +107,11 @@ defineExpose({
     :on-after-leave="onCloseModal"
   >
     <template #header>
-      <div class="w-full" :class="{ 'cursor-move': isDraggable }">
-        {{ modalTitle }}
+      <div class="w-full flex items-center space-x-4" :class="{ 'cursor-move': isDraggable }">
+        <div>{{ modalTitle }}</div>
+        <div v-if="props.isMultilingual">
+          <slot name="multilingual"></slot>
+        </div>
       </div>
     </template>
     <template #default>

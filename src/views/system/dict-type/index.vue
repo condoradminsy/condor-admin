@@ -5,6 +5,7 @@ import { $t } from '@/locales';
 import DictData from './modules/dict-data.vue';
 const dictRef = ref();
 const config = ref<Condor.Table.Config>({
+  multilingualFields: ['title', 'remark'],
   urls: {
     index: '/core/dict-type/index',
     add: '/core/dict-type/add',

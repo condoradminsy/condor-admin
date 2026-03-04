@@ -2,13 +2,13 @@
 import { computed, h, provide, ref } from 'vue';
 import { NButton } from 'naive-ui';
 import { fetchUpload } from '@/service/api';
-import { useDictStore } from '@/store/modules/dict';
-import { $t } from '@/locales';
+import { useCondorStore } from '@/store/modules/condor';
+import { $t, getValueByLocale } from '@/locales';
 
-const dictStore = useDictStore();
+const condorStore = useCondorStore();
 const header = computed<Condor.Table.Header>(() => {
   return {
-    params: dictStore.dictData.attachment_type,
+    params: condorStore.dictData.attachment_type,
     index: 0,
     searchField: 'a.type'
   };
@@ -37,7 +37,7 @@ const config = ref<Condor.Table.Config>({
       },
       operator: false,
       render(row) {
-        return row.type_name || '未分组';
+        return getValueByLocale(row.type_name);
       }
     },
     {

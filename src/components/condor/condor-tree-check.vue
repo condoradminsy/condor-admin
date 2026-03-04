@@ -22,6 +22,7 @@ const props = withDefaults(
     renderSuffix?: any;
     showIrrelevantNodes?: boolean;
     childrenField?: string;
+    i18nkey?: boolean;
   }>(),
   {
     checkStrategy: 'all',
@@ -34,6 +35,7 @@ const props = withDefaults(
     showLine: true,
     childrenField: 'children',
     showIrrelevantNodes: false,
+    i18nkey: false,
     renderPrefix: () => undefined,
     renderSuffix: () => undefined,
     param: () => ({})
@@ -97,7 +99,18 @@ const getData = () => {
     }
   }).then(({ error, data }) => {
     if (!error) {
-      treeList.value = data.list || data || [];
+      // i18nkey 为true时，将name字段翻译
+      const renderI18nKey = (list: any[]) => {
+        list.forEach(item => {
+          item[props.labelField] = () => (item.i18nkey ? $t(item.i18nkey) : item[props.labelField]);
+          if (item.children) {
+            renderI18nKey(item.children);
+          }
+        });
+        return list;
+      };
+      const list = data.list || data || [];
+      treeList.value = props.i18nkey ? renderI18nKey(list) : list;
     }
   });
 };
