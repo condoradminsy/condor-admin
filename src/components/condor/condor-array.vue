@@ -1,47 +1,55 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
+
 defineOptions({
   name: 'CondorArray'
 });
-const props = withDefaults(
-  defineProps<{
-    value: any[];
-    header?: boolean;
-    keys?: string[];
-    labels?: string[];
-  }>(),
-  {
-    header: true,
-    keys: () => ['label', 'value'],
-    labels: () => ['condor.common.key', 'condor.common.value']
-  }
-);
+
+// 类型定义
+interface ArrayItem {
+  [key: string]: string;
+}
+
+interface ArrayProps {
+  value: ArrayItem[] | string | null | undefined;
+  header?: boolean;
+  keys?: string[];
+  labels?: string[];
+}
+
+const props = withDefaults(defineProps<ArrayProps>(), {
+  header: true,
+  keys: () => ['label', 'value'],
+  labels: () => ['condor.common.key', 'condor.common.value']
+});
+
 // 绑定关系
 const emit = defineEmits<{
-  (e: 'update:value', value: any): void;
+  (e: 'update:value', value: ArrayItem[]): void;
 }>();
 
-const internal = ref<{ [key: string]: any }[]>([]);
+const internal = ref<ArrayItem[]>([]);
 
-function normalizeValue(v: any) {
+function normalizeValue(v: ArrayItem[] | string | null | undefined): ArrayItem[] {
   if (!v) return [];
   if (Array.isArray(v)) return v;
   try {
-    return JSON.parse(v);
+    const parsed = JSON.parse(v);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
 }
 
 const isSyncing = ref(false);
-let timer: any = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
 
 watch(
   () => props.value,
-  v => {
+  (v: ArrayItem[] | string | null | undefined) => {
     if (isSyncing.value) return;
-    const arr = normalizeValue(v).map((item: any) => ({ ...(item || {}) }));
+    const arr = normalizeValue(v).map((item: ArrayItem) => ({ ...(item || {}) }));
     internal.value = arr;
   },
   { immediate: true }
@@ -49,7 +57,7 @@ watch(
 
 watch(
   internal,
-  async v => {
+  async (v: ArrayItem[]) => {
     isSyncing.value = true;
     emit('update:value', v);
     if (timer) {
@@ -63,8 +71,8 @@ watch(
 );
 
 function add() {
-  const obj = props.keys.reduce((p: any, c: string) => ({ ...p, [c]: '' }), {});
-  internal.value.push(obj);
+  const obj = props.keys.reduce((p: Record<string, string>, c: string) => ({ ...p, [c]: '' }), {});
+  internal.value.push(obj as ArrayItem);
 }
 
 function del(index: number) {
@@ -75,7 +83,7 @@ function del(index: number) {
 </script>
 
 <template>
-  <div class="dx-block-list">
+  <div class="condor-block-list">
     <div v-if="props.header" class="flex justify-between">
       <NGrid x-gap="12" :cols="props.labels.length" class="mb-2">
         <NGi v-for="(title, key) in props.labels" :key="key">{{ $t(title) }}</NGi>
@@ -109,7 +117,7 @@ function del(index: number) {
 </template>
 
 <style lang="scss" scoped>
-.dx-block-list {
+.condor-block-list {
   width: 100%;
   .left {
     width: calc(100% - 110px);

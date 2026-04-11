@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useCondorStore } from '@/store/modules/condor';
 import { getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorDictSelect'
 });
 const condorStore = useCondorStore();
+
+const dictCache = new Map<string, MappedDictItem[]>();
 
 const props = withDefaults(
   defineProps<{
@@ -69,12 +71,25 @@ const value = computed<string | number | Array<string | number> | null | undefin
 
 /** 映射字典数据供 NSelect 使用（缓存计算） */
 const dictList = computed<MappedDictItem[]>(() => {
+  const key = `${props.code}-${props.type}`;
+  if (dictCache.has(key)) return dictCache.get(key)!;
   const raw = (condorStore.dictData?.[props.code] as RawDictItem[]) || [];
-  return raw.map(item => ({
+  const mapped = raw.map(item => ({
     label: getValueByLocale(item.label),
     value: props.type === 'number' ? Number(item.value) : `${item.value}`
   }));
+  dictCache.set(key, mapped);
+  return mapped;
 });
+
+// 清空缓存当字典数据改变
+watch(
+  () => condorStore.dictData,
+  () => {
+    dictCache.clear();
+  },
+  { deep: true }
+);
 </script>
 
 <template>

@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useCondorStore } from '@/store/modules/condor';
 import { getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorDictRadio'
 });
 const condorStore = useCondorStore();
+
+const dictCache = new Map<string, MappedDictItem[]>();
 
 /**
  * Props
@@ -49,13 +51,26 @@ type MappedDictItem = { id?: string | number; label: string; value: string | num
  * 以 code 为键从 store 中取出原始列表并映射为组件需要的项
  */
 const dictList = computed<MappedDictItem[]>(() => {
+  const key = `${props.code}-${props.type}`;
+  if (dictCache.has(key)) return dictCache.get(key)!;
   const raw = (condorStore.dictData?.[props.code] as RawDictItem[]) || [];
-  return raw.map(item => ({
+  const mapped = raw.map(item => ({
     id: item.id,
     label: getValueByLocale(item.label),
     value: props.type === 'number' ? Number(item.value) : `${item.value}`
   }));
+  dictCache.set(key, mapped);
+  return mapped;
 });
+
+// 清空缓存当字典数据改变
+watch(
+  () => condorStore.dictData,
+  () => {
+    dictCache.clear();
+  },
+  { deep: true }
+);
 </script>
 
 <template>

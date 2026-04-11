@@ -6,12 +6,26 @@ import { request } from '@/service/request';
 import { useThemeStore } from '@/store/modules/theme';
 import { $t, getLocale, getValueByLocale } from '@/locales';
 import CondorLang from './condor-lang.vue';
+
 defineOptions({
   name: 'CondorAttachmentType'
 });
+
+// 类型定义
+interface AttachmentType {
+  id?: number;
+  name: Record<string, string>;
+}
+
+interface DialogReactive {
+  loading?: boolean;
+  destroy: () => void;
+}
+
 const themeStore = useThemeStore();
 const bgColor1 = transformColorWithOpacity(themeStore.themeColor, 0.1);
 const bgColor2 = transformColorWithOpacity(themeStore.themeColor, 0.3, '#000000');
+
 const props = withDefaults(
   defineProps<{
     value?: number;
@@ -20,9 +34,11 @@ const props = withDefaults(
     value: 0
   }
 );
+
 const emit = defineEmits<{
   (e: 'update:value', value: number): void;
 }>();
+
 const value = computed({
   get() {
     return props.value;
@@ -31,15 +47,18 @@ const value = computed({
     emit('update:value', val);
   }
 });
+
 const urls = {
   add: '/core/attachment-type/add',
   edit: '/core/attachment-type/edit',
   del: '/core/attachment-type/del',
   index: '/core/attachment-type/index'
 };
+
 const isLoading = ref(false);
 const locale = ref(getLocale().toLocaleLowerCase());
-const list = ref<any>([]);
+const list = ref<AttachmentType[]>([]);
+
 const getList = () => {
   isLoading.value = true;
   request({
@@ -48,19 +67,22 @@ const getList = () => {
   })
     .then(({ data, error }) => {
       if (!error) {
-        list.value = data;
+        list.value = Array.isArray(data) ? (data as AttachmentType[]) : [];
       }
     })
     .finally(() => {
       isLoading.value = false;
     });
 };
+
 getList();
-const addOrEdit = (row: any) => {
-  const name = ref({
+
+const addOrEdit = (row: AttachmentType) => {
+  const name = ref<Record<string, string>>({
     ...row.name
   });
-  const d: any = window.$dialog?.create({
+
+  const d: DialogReactive | undefined = window.$dialog?.create({
     title: row.id ? $t('condor.component.edit_group') : $t('condor.component.add_group'),
     content: () => {
       return h(
@@ -73,7 +95,7 @@ const addOrEdit = (row: any) => {
             h(NInput, {
               value: name.value[locale.value],
               class: 'mr-2',
-              onUpdateValue: val => {
+              onUpdateValue: (val: string) => {
                 name.value[locale.value] = val;
               }
             }),
@@ -93,8 +115,8 @@ const addOrEdit = (row: any) => {
     positiveText: $t('common.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: () => {
-      d.loading = true;
-      return new Promise((resolve, reject) => {
+      if (d) d.loading = true;
+      return new Promise<boolean>((resolve, reject) => {
         request({
           url: row.id ? urls.edit : urls.add,
           method: 'post',
@@ -108,7 +130,7 @@ const addOrEdit = (row: any) => {
               getList();
               resolve(true);
             } else {
-              d.loading = false;
+              if (d) d.loading = false;
               reject(error);
             }
           })
@@ -156,7 +178,7 @@ const toDel = (id: number) => {
         <!-- eslint-disable vue/no-static-inline-styles -->
         <NTooltip trigger="hover" style="padding: 5px 8px">
           <template #trigger>
-            <NButton quaternary size="small" circle @click="addOrEdit({})">
+            <NButton quaternary size="small" circle @click="addOrEdit({ name: {} })">
               <icon-material-symbols-add-2-rounded class="cursor-pointer text-18px" />
             </NButton>
           </template>
