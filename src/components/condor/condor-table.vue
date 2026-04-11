@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed, h, isVNode, onMounted, ref, watch } from 'vue';
+import { type VNode, computed, h, isVNode, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { NButton, NImage, NTag } from 'naive-ui';
+import type { DataTableColumns } from 'naive-ui';
 import dayjs from 'dayjs';
 import { VueDraggable } from 'vue-draggable-plus';
 import { Icon } from '@iconify/vue';
@@ -17,6 +18,20 @@ import { $t, getLocale, getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorTable'
 });
+type ButtonItem = 'refresh' | 'add' | 'multi' | 'del' | ((...args: any[]) => VNode);
+type ToolItem = 'grid' | 'column' | 'search' | 'export' | ((...args: any[]) => VNode);
+
+interface ExpandIconProps {
+  expanded: boolean;
+  rowData: Record<string, unknown>;
+}
+
+interface FormModalInstance {
+  open: (options: { title: string; type: string }) => void;
+  close: () => void;
+  setSubLoading: (loading: boolean) => void;
+}
+
 const props = withDefaults(
   defineProps<{
     isTable?: boolean;
@@ -25,15 +40,15 @@ const props = withDefaults(
     isPagination?: boolean;
     showSearch?: boolean;
     header?: Condor.Table.Header;
-    buttons?: ('refresh' | 'add' | 'multi' | 'del')[];
-    tools?: ('grid' | 'column' | 'search' | 'export')[];
+    buttons?: ButtonItem[];
+    tools?: ToolItem[];
     config: Condor.Table.Config;
-    scrollX?: number | undefined;
+    scrollX?: number;
     colSpan?: number;
     formLabelWidth?: string;
     defaultExpandAll?: boolean;
     initSearchParams?: Record<string, any>;
-    renderExpandIcon?: (row: Record<string, any>) => any;
+    renderExpandIcon?: (props: ExpandIconProps) => VNode;
   }>(),
   {
     isTable: true,
@@ -47,7 +62,7 @@ const props = withDefaults(
     }),
     buttons: () => ['refresh', 'add', 'del'],
     tools: () => ['grid', 'column', 'search', 'export'],
-    renderExpandIcon: ({ expanded }: any) => {
+    renderExpandIcon: ({ expanded }: ExpandIconProps) => {
       return h(
         'div',
         {},
@@ -72,17 +87,17 @@ const { baseURL } = getBaseUrl();
 const condorStore = useCondorStore();
 const authStore = useAuthStore();
 const tableOrList = ref(props.isTable);
-const formModalRef = ref();
+const formModalRef = ref<FormModalInstance>();
 const formRef = ref();
 const isShowSearch = ref(props.showSearch);
-const checkedRowKeys = ref([]);
-const columns = ref<any>([]);
+const checkedRowKeys = ref<(string | number)[]>([]);
+const columns = ref<Condor.Table.Columns[]>([]);
 const route = useRoute();
 watch(
   () => props.config.columns,
   newVal => {
     columns.value =
-      newVal?.map((item: any, index: number) => {
+      newVal?.map((item: Condor.Table.Columns, index: number) => {
         return {
           ...item,
           CondorDwbTableColumnCheckedKey: `${item.key}|${index}`
@@ -130,8 +145,8 @@ const onOpenModal = () => {
   currentLocale.value = getLocale().toLocaleLowerCase();
 };
 // 格式化操作列的值
-const formatOperateValue = (v: string) => {
-  let parsedV: any = v;
+const formatOperateValue = (v: string): string | number | boolean => {
+  let parsedV: string | number | boolean = v;
   if (v !== undefined) {
     if (/^-?\d+$/.test(v) || /^-?\d+\.\d+$/.test(v)) {
       parsedV = Number(v);
@@ -142,15 +157,15 @@ const formatOperateValue = (v: string) => {
   return parsedV;
 };
 // 操作列
-const renderOperate = (row: Record<string, any>, col: Condor.Table.Columns) => {
-  const buttons: any = [];
-  let btns: any = [];
+const renderOperate = (row: Condor.Table.RowData, col: Condor.Table.Columns) => {
+  const buttons: (VNode | string)[] = [];
+  let btns: Condor.Table.OperateButton[] = [];
   if (typeof col.buttons === 'function') {
     btns = col.buttons(row);
   } else if (Array.isArray(col.buttons)) {
     btns = col.buttons;
   }
-  btns.forEach((btn: any) => {
+  btns.forEach((btn: Condor.Table.OperateButton) => {
     if (typeof btn === 'function') {
       buttons.push(btn(row));
     } else if (typeof btn === 'string') {
@@ -182,9 +197,12 @@ const renderOperate = (row: Record<string, any>, col: Condor.Table.Columns) => {
   );
 };
 // 字典列
-const renderDictColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
-  const dictList = condorStore.dictData[col.component.props.code] || [];
-  const info = dictList.find((item: any) => `${item.value}` === `${row[col.key]}`) || {};
+const renderDictColumn = (row: Condor.Table.RowData, col: Condor.Table.Columns) => {
+  const dictCode = col.component?.props?.code;
+  const dictList: Condor.Table.DictItem[] = (dictCode ? condorStore.dictData[dictCode] : []) || [];
+  const info =
+    dictList.find((item: Condor.Table.DictItem) => `${item.value}` === `${row[col.key]}`) ||
+    ({} as Condor.Table.DictItem);
   const color = info?.color || '#18A058';
   const bgColor = transformColorWithOpacity(color, 0.1);
   return h(
@@ -203,7 +221,7 @@ const renderDictColumn = (row: Record<string, any>, col: Condor.Table.Columns) =
   );
 };
 // 时间列
-const renderTimeColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
+const renderTimeColumn = (row: Condor.Table.RowData, col: Condor.Table.Columns) => {
   const tv = Number(row[col.key]);
   if (Number.isNaN(tv)) {
     return row[col.key];
@@ -215,7 +233,7 @@ const renderTimeColumn = (row: Record<string, any>, col: Condor.Table.Columns) =
     col.formatter === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'
   );
 };
-const typeMap: any = {
+const typeMap: Record<string, string> = {
   video: 'ion-film-outline',
   audio: 'gridicons-audio',
   txt: 'tabler-file-type-txt',
@@ -252,7 +270,7 @@ const getTypeByExtension = (extension: string | undefined) => {
   return type;
 };
 // 附件列
-const renderUploadColumn = (row: Record<string, any>, col: Condor.Table.Columns) => {
+const renderUploadColumn = (row: Condor.Table.RowData, col: Condor.Table.Columns) => {
   let values = row[col.key];
   if (props.config.multilingualFields?.length && props.config.multilingualFields.includes(col.key)) {
     values = getValueByLocale(row[col.key]);
@@ -298,41 +316,39 @@ const renderUploadColumn = (row: Record<string, any>, col: Condor.Table.Columns)
   );
 };
 // 表格列
-const tableColumns = computed<any>(() => {
+const isDictColumn = (col: Condor.Table.Columns): boolean => {
+  const dictNames = ['condor-dict-radio', 'condor-dict-select'];
+  return (
+    dictNames.includes(col.component?.name ?? '') && Boolean(col.component?.props?.code) && col.render === undefined
+  );
+};
+
+const getColumnRender = (col: Condor.Table.Columns): ((row: Condor.Table.RowData) => VNode | string) | undefined => {
+  if (col.type === 'operate') return (row: Condor.Table.RowData) => renderOperate(row, col);
+  if (col.component?.name === 'n-switch' && col.render === undefined)
+    return (row: Condor.Table.RowData) => getSwitchBtn(row, col) as VNode;
+  if (['datetime', 'date'].includes(col.render as string))
+    return (row: Condor.Table.RowData) => renderTimeColumn(row, col);
+  if (isDictColumn(col)) return (row: Condor.Table.RowData) => renderDictColumn(row, col);
+  if ((col.component?.name === 'condor-upload' && col.render === undefined) || col.render === 'image')
+    return (row: Condor.Table.RowData) => renderUploadColumn(row, col);
+  if (props.config.multilingualFields?.length && props.config.multilingualFields.includes(col.key))
+    return (row: Condor.Table.RowData) => getValueByLocale(row[col.key]) as string;
+  if (typeof col.render === 'function')
+    return (row: Condor.Table.RowData) => (col.render as (row: Condor.Table.RowData) => VNode | string)(row);
+  return undefined;
+};
+
+const tableColumns = computed<DataTableColumns<Condor.Table.RowData>>(() => {
   return columns.value
-    .filter((col: any) => {
-      return col.visible !== false && col.checked !== false;
-    })
-    .map((col: any) => {
-      // 默认列
-      let render;
-      if (col.type === 'operate') {
-        render = (row: any) => renderOperate(row, col);
-      } else if (col.component?.name === 'n-switch' && col.render === undefined) {
-        render = (row: any) => getSwitchBtn(row, col);
-      } else if (['datetime', 'date'].includes(col.render)) {
-        render = (row: any) => renderTimeColumn(row, col);
-      } else if (
-        ['condor-dict-radio', 'condor-dict-select'].includes(col.component?.name) &&
-        col.component.props?.code &&
-        col.render === undefined
-      ) {
-        render = (row: any) => renderDictColumn(row, col);
-      } else if ((col.component?.name === 'condor-upload' && col.render === undefined) || col.render === 'image') {
-        render = (row: any) => renderUploadColumn(row, col);
-      } else if (props.config.multilingualFields?.length && props.config.multilingualFields.includes(col.key)) {
-        render = (row: any) => getValueByLocale(row[col.key]);
-      } else if (col.render !== undefined) {
-        render = col.render;
-      }
-      return {
-        align: 'center',
-        ...col,
-        render
-      };
-    });
+    .filter((col: Condor.Table.Columns) => col.visible !== false && col.checked !== false)
+    .map((col: Condor.Table.Columns) => ({
+      align: 'center' as const,
+      ...col,
+      render: getColumnRender(col)
+    })) as unknown as DataTableColumns<Condor.Table.RowData>;
 });
-const updateCheckedRowKeys = (val: any) => {
+const updateCheckedRowKeys = (val: (string | number)[]) => {
   checkedRowKeys.value = val;
 };
 // init param
@@ -355,9 +371,9 @@ const navChange = (index: number) => {
 // 初始获取数据
 onMounted(() => {
   // 搜索列是否有默认参数
-  searchColumns.value.forEach((col: any) => {
+  searchColumns.value.forEach((col: Condor.Table.SearchConfig) => {
     if (col.value !== undefined && col.value !== null && col.value !== '') {
-      totalParams.value[col.key] = col.value;
+      totalParams.value[col.key as string] = col.value;
     }
   });
   // 获取表格数据
@@ -373,12 +389,10 @@ const getDictLabel = (code: string, value: any) => {
   return value;
 };
 // 虚拟dom的值
-const getVNodeValue = (v: any) => {
-  // console.log('v', v);
-  if (typeof v.children === 'string' || typeof v.children === 'number') {
-    return v.children;
-  } else if (Array.isArray(v.children)) {
-    return v.children
+const getVNodeValue = (v: VNode): string => {
+  if (typeof v === 'string' || typeof v === 'number') return String(v);
+  if (v.children && Array.isArray(v.children)) {
+    return (v.children as any[])
       .map((child: any) => {
         if (typeof child === 'string' || typeof child === 'number') return String(child);
         if (isVNode(child)) return String(getVNodeValue(child) ?? '');
@@ -388,7 +402,7 @@ const getVNodeValue = (v: any) => {
   } else if (v.props) {
     for (const k of ['value', 'text', 'label', 'title', 'content', 'src', 'href']) {
       if (v.props[k] !== undefined) {
-        return v.props[k];
+        return String(v.props[k]);
       }
     }
   }
@@ -400,11 +414,11 @@ const exportTableData = () => {
     window.$message?.error($t('condor.common.no_data_available'));
     return;
   }
-  const header: any = [];
-  const data: any = [];
+  const header: string[] = [];
+  const data: string[][] = [];
   columns.value.forEach((item: Condor.Table.Columns) => {
     if (!['operate', 'selection', 'expand'].includes(item.type as string)) {
-      const title = typeof item.title === 'function' ? item.title() : item.title;
+      const title = typeof item.title === 'function' ? item.title() : item.title || '';
       header.push(title);
       tableData.value.forEach((tableRow, index) => {
         if (data[index] === undefined) {
@@ -419,8 +433,8 @@ const exportTableData = () => {
             value = getVNodeValue(v) || value;
           }
         } else if (
-          ['condor-dict-radio', 'condor-dict-select', 'condor-dict-checkbox'].includes(item.component?.name) &&
-          item.component.props?.code
+          ['condor-dict-radio', 'condor-dict-select', 'condor-dict-checkbox'].includes(item.component?.name ?? '') &&
+          item.component?.props?.code
         ) {
           value = getDictLabel(item.component.props.code, value);
         }

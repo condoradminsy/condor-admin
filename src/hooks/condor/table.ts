@@ -17,8 +17,17 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
       pageSizes: [10, 20, 50, 100, 200, 500],
       showQuickJumper: true,
       showSizePicker: true,
-      perfix({ itemCount }: { itemCount: number }) {
-        return $t('condor.component.total_items', { total: itemCount });
+      prefix({
+        itemCount
+      }: {
+        startIndex: number;
+        endIndex: number;
+        page: number;
+        pageSize: number;
+        pageCount: number;
+        itemCount: number | undefined;
+      }) {
+        return $t('condor.component.total_items', { total: itemCount ?? 0 });
       }
     },
     initParams: {},
@@ -127,7 +136,7 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
   };
 
   // 删除方法
-  const toDelete = (value: string | number | number[] | string[]) => {
+  const toDelete = (value: string | number | number[] | string[] | (string | number)[]) => {
     request({
       url: urls.del,
       method: 'post',

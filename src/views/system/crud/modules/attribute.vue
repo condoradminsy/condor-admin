@@ -240,6 +240,7 @@ function onUpdateValue(_: string, option: any) {
         url="core/dict-type/selectpage"
         label-field="title"
         key-field="name"
+        :i18nkey="true"
       />
     </NInputGroup>
 

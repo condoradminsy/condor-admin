@@ -2,6 +2,7 @@
 import { computed, h, ref } from 'vue';
 import { NTag } from 'naive-ui';
 import { request } from '@/service/request';
+import { getValueByLocale } from '@/locales';
 defineOptions({
   name: 'CondorSelect'
 });
@@ -15,6 +16,7 @@ const props = withDefaults(
     keyField?: string;
     isPagination?: boolean;
     maxTagCount?: number;
+    i18nkey?: boolean;
     param?: any;
   }>(),
   {
@@ -24,6 +26,7 @@ const props = withDefaults(
     labelField: 'name',
     keyField: 'id',
     maxTagCount: 10,
+    i18nkey: false,
     param: () => ({})
   }
 );
@@ -74,7 +77,7 @@ const getData = (keyword?: string) => {
       if (!error) {
         options.value = (data.list || data || []).map((item: any) => {
           return {
-            label: item[props.labelField],
+            label: props.i18nkey ? getValueByLocale(item[props.labelField]) : item[props.labelField],
             value: item[props.keyField]
           };
         });

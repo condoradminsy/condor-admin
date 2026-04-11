@@ -30,7 +30,8 @@ const config = ref<Condor.Table.Config>({
         props: {
           url: 'core/role/selectpage',
           checkable: true,
-          multiple: true
+          multiple: true,
+          i18nkey: true
         }
       },
       visible: false

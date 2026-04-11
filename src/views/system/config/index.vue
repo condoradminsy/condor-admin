@@ -136,7 +136,8 @@ const configColumns = [
       props: {
         url: 'core/dict-type/selectpage',
         labelField: 'title',
-        keyField: 'name'
+        keyField: 'name',
+        i18nkey: true
       }
     }
   },
