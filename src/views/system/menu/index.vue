@@ -83,10 +83,7 @@ const config = ref<Condor.Table.Config>({
       title() {
         return $t('system.menu.i18nkey');
       },
-      operator: false,
-      condition(form: any) {
-        return form.menu_type === 1;
-      }
+      operator: false
     },
     {
       key: 'icon',

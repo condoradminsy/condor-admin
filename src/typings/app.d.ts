@@ -593,6 +593,11 @@ declare namespace App {
           createtime: string;
           updatetime: string;
           status: string;
+          title: string;
+          url: string;
+          username: string;
+          email: string;
+          password: string;
         };
         component: {
           group: string;
@@ -656,6 +661,8 @@ declare namespace App {
           view_logs: string;
           get_configuration: string;
           table_fields: string;
+          update_profile: string;
+          get_dict: string;
         };
       };
     };

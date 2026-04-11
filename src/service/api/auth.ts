@@ -30,6 +30,15 @@ export function fetchGetUserInfo() {
   return request<Api.Auth.UserInfo>({ url: '/core/common/getUserInfo' });
 }
 
+/** Update Profile */
+export function fetchUpdateProfile(data: Api.Auth.UpdateProfileParams) {
+  return request<Api.Auth.UpdateProfileParams>({
+    url: '/core/common/updateProfile',
+    method: 'post',
+    data
+  });
+}
+
 /**
  * Refresh token
  *

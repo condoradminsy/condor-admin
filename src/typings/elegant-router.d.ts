@@ -33,6 +33,7 @@ declare module "@elegant-router/types" {
     "system_dict-type": "/system/dict-type";
     "system_login-log": "/system/login-log";
     "system_menu": "/system/menu";
+    "system_profile": "/system/profile";
     "system_role": "/system/role";
     "system_test": "/system/test";
   };
@@ -104,6 +105,7 @@ declare module "@elegant-router/types" {
     | "system_dict-type"
     | "system_login-log"
     | "system_menu"
+    | "system_profile"
     | "system_role"
     | "system_test"
   >;

@@ -237,7 +237,8 @@ const local: App.I18n.Schema = {
     system_crud: 'CRUD生成',
     system_test: 'Crud测试',
     'system_admin-log': '操作日志',
-    'system_login-log': '登录日志'
+    'system_login-log': '登录日志',
+    system_profile: '个人资料'
   },
   page: {
     login: {
@@ -378,7 +379,12 @@ const local: App.I18n.Schema = {
       encryption_error: '加密失败',
       createtime: '创建时间',
       updatetime: '更新时间',
-      status: '状态'
+      status: '状态',
+      title: '标题',
+      url: 'URL',
+      username: '用户名',
+      email: '邮箱',
+      password: '密码'
     },
     component: {
       group: '分组',
@@ -441,7 +447,9 @@ const local: App.I18n.Schema = {
       run_once: '运行一次',
       view_logs: '日志查看',
       get_configuration: '获取配置',
-      table_fields: '表字段'
+      table_fields: '表字段',
+      update_profile: '更新资料',
+      get_dict: '获取字典'
     }
   }
 };

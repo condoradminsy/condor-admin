@@ -179,6 +179,7 @@ const routeMap: RouteMap = {
   "system_dict-type": "/system/dict-type",
   "system_login-log": "/system/login-log",
   "system_menu": "/system/menu",
+  "system_profile": "/system/profile",
   "system_role": "/system/role",
   "system_test": "/system/test"
 };

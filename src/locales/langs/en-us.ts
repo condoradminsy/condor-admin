@@ -241,7 +241,8 @@ const local: App.I18n.Schema = {
     system_crud: 'Crud',
     system_test: 'Crud Test',
     'system_admin-log': 'Admin Log',
-    'system_login-log': 'Login Log'
+    'system_login-log': 'Login Log',
+    system_profile: 'Profile'
   },
   page: {
     login: {
@@ -382,7 +383,12 @@ const local: App.I18n.Schema = {
       encryption_error: 'Encryption error',
       createtime: 'Create Time',
       updatetime: 'Update Time',
-      status: 'Status'
+      status: 'Status',
+      title: 'Title',
+      url: 'Url',
+      username: 'Username',
+      email: 'Email',
+      password: 'Password'
     },
     component: {
       group: 'Group',
@@ -445,7 +451,9 @@ const local: App.I18n.Schema = {
       run_once: 'Run Once',
       view_logs: 'View Logs',
       get_configuration: 'Get Configuration',
-      table_fields: 'Table Fields'
+      table_fields: 'Table Fields',
+      update_profile: 'Update Profile',
+      get_dict: 'Get Dict'
     }
   }
 };

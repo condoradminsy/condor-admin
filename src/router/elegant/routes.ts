@@ -164,6 +164,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_profile',
+        path: '/system/profile',
+        component: 'view.system_profile',
+        meta: {
+          title: 'system_profile',
+          i18nKey: 'route.system_profile'
+        }
+      },
+      {
         name: 'system_role',
         path: '/system/role',
         component: 'view.system_role',
