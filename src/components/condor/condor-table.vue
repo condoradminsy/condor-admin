@@ -2,7 +2,7 @@
 import { type VNode, computed, h, isVNode, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { NButton, NImage, NTag } from 'naive-ui';
-import type { DataTableColumns } from 'naive-ui';
+import type { DataTableColumns, DataTableCreateSummary } from 'naive-ui';
 import dayjs from 'dayjs';
 import { VueDraggable } from 'vue-draggable-plus';
 import { Icon } from '@iconify/vue';
@@ -49,6 +49,7 @@ const props = withDefaults(
     defaultExpandAll?: boolean;
     initSearchParams?: Record<string, any>;
     renderExpandIcon?: (props: ExpandIconProps) => VNode;
+    summary?: DataTableCreateSummary;
   }>(),
   {
     isTable: true,
@@ -80,6 +81,7 @@ const props = withDefaults(
     scrollX: undefined,
     colSpan: 24,
     formLabelWidth: '100px',
+    summary: undefined,
     initSearchParams: () => ({})
   }
 );
@@ -646,6 +648,7 @@ defineExpose({
           :render-expand-icon="props.renderExpandIcon"
           :scroll-x="props.scrollX"
           :default-expand-all="props.defaultExpandAll"
+          :summary="props.summary"
           @update:page="handleCurrentChange"
           @update:page-size="handleSizeChange"
           @update:checked-row-keys="updateCheckedRowKeys"
@@ -676,17 +679,18 @@ defineExpose({
       @on-close="resetForm"
       @on-open="onOpenModal"
     >
-    <template #multilingual>
-      <CondorLang v-model:value="currentLocale"></CondorLang>
-    </template>
-      <slot name="form">
-        <NForm
-          ref="formRef"
-          :model="form"
-          :rules="rules"
-          label-placement="left"
-          :label-width="props.formLabelWidth"
-        >
+      <template #multilingual>
+        <CondorLang v-model:value="currentLocale"></CondorLang>
+      </template>
+
+      <NForm
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        label-placement="left"
+        :label-width="props.formLabelWidth"
+      >
+        <slot name="form">
           <NGrid :cols="24" :x-gap="24">
             <template v-for="(item, index) in fields" :key="index">
               <NFormItemGi
@@ -741,8 +745,8 @@ defineExpose({
               </NFormItemGi>
             </template>
           </NGrid>
-        </NForm>
-      </slot>
+        </slot>
+      </NForm>
     </CondorModal>
   </slot>
 </template>

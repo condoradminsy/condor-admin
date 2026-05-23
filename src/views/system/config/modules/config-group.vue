@@ -86,7 +86,13 @@ const selectGroup = (row: any) => {
   emit('update:active', row);
 };
 
+const toAdd = () => {
+  activeId.value = 0;
+  groupRef.value.open({ type: 'add', title: $t('system.config.add_group') });
+};
+
 const edit = (row: any) => {
+  activeId.value = 0;
   groupRef.value.setForm(row, 'id');
   groupRef.value.open({
     type: 'edit',
@@ -123,9 +129,7 @@ const toDel = (id: number) => {
           size="small"
           circle
           type="primary"
-          @click="
-            groupRef.open({ type: 'add', title: $t('system.config.add_group') })
-          "
+          @click="toAdd"
         >
           <icon-material-symbols-add-2
             :font-size="16"

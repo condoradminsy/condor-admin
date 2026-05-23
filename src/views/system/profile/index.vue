@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { fetchUpdateProfile } from '@/service/api';
+import JSEncrypt from 'jsencrypt';
+import { fetchGetPublicKey, fetchUpdateProfile } from '@/service/api';
 import { useAuthStore } from '@/store/modules/auth';
 import { $t } from '@/locales';
 
@@ -54,16 +55,38 @@ const avatar = ref(authStore.userInfo.avatar);
 const email = ref(authStore.userInfo.email);
 const password = ref('');
 const isLoading = ref(false);
-const submit = () => {
+const submit = async () => {
   isLoading.value = true;
+  const { data, error: publicKeyError } = await fetchGetPublicKey();
+  if (publicKeyError) {
+    isLoading.value = false;
+    return;
+  }
+  const jse = new JSEncrypt();
+  jse.setPublicKey(data.publicKey); // 确保包含 -----BEGIN PUBLIC KEY----- ... -----
+  const encryptedBase64 = jse.encrypt(password.value);
+  if (!encryptedBase64) {
+    isLoading.value = false;
+    window.$notification?.error({
+      title: $t('common.warning'),
+      content: $t('condor.common.encryption_error'),
+      duration: 4500
+    });
+    return;
+  }
   fetchUpdateProfile({
     avatar: avatar.value,
     email: email.value,
-    password: password.value
+    password: encryptedBase64
   })
     .then(({ error }) => {
       if (!error) {
         authStore.initUserInfo();
+        password.value = '';
+        window.$notification?.success({
+          title: $t('common.tip'),
+          content: $t('common.modifySuccess')
+        });
       }
     })
     .finally(() => {

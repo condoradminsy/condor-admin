@@ -1,0 +1,8 @@
+# 构建产物目录
+dist/
+
+# 依赖目录
+node_modules/
+
+# .git目录
+.git/
