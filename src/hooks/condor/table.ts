@@ -5,6 +5,9 @@ import { request } from '@/service/request';
 import { useAuthStore } from '@/store/modules/auth';
 import { $t } from '@/locales';
 
+// 使用 WeakMap 管理每行的 loading 状态，避免污染原始数据
+const switchLoadingMap = new WeakMap<Record<string, any>, Record<string, boolean>>();
+
 export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.UseTableProps) => {
   const state = reactive<Condor.Table.StateProps>({
     // 表格数据
@@ -188,9 +191,12 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
 
   // 获取开关按钮
   const getSwitchBtn = (row: any, col: Record<string, any>) => {
-    if (row.condorSwitchLoadings === undefined) {
-      row.condorSwitchLoadings = {};
+    // 从 WeakMap 获取或初始化 loading 状态
+    if (!switchLoadingMap.has(row)) {
+      switchLoadingMap.set(row, {});
     }
+    const loadings = switchLoadingMap.get(row)!;
+
     const props = {
       round: false,
       disabled: !useAuthStore().hasPermission(urls.multi)
@@ -205,10 +211,10 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
       NSwitch,
       {
         value: row[col.key],
-        loading: Boolean(row.condorSwitchLoadings[col.key]),
+        loading: Boolean(loadings[col.key]),
         ...props,
         onUpdateValue: value => {
-          row.condorSwitchLoadings[col.key] = true;
+          loadings[col.key] = true;
           request({
             url: urls.multi,
             method: 'post',
@@ -220,11 +226,12 @@ export const useTable = ({ urls, isPagination, orderBy, order }: Condor.Table.Us
           })
             .then(({ error }: any) => {
               if (!error) {
+                // 触发父组件更新而非直接修改
                 row[col.key] = value;
               }
             })
             .finally(() => {
-              row.condorSwitchLoadings[col.key] = false;
+              loadings[col.key] = false;
             });
         }
       },

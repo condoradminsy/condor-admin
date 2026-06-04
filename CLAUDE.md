@@ -2,9 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## 技术栈
 
-CondorAdmin 是基于 [SoybeanAdmin](https://github.com/soybeanjs/soybean-admin) 开发的后台管理模板，后端使用 PHP-Webman + MySQL，前端使用 Vue3 + Vite7 + TypeScript + NaiveUI + UnoCSS。采用 pnpm monorepo 架构。
+Vue3,Vite7,Pinia,TypeScript,NaiveUI,UnoCSS
+采用 pnpm monorepo 架构
 
 ## Commands
 
@@ -19,6 +20,18 @@ pnpm gen-route        # 重新生成 Elegant Router 路由文件
 pnpm commit           # 交互式生成 Conventional Commits 提交信息
 pnpm preview          # 预览构建结果 (port 9725)
 ```
+
+## TypeScript 规范
+
+- 优先使用 `interface` 而不是 `type`（除非需要联合类型）
+- 不允许 `any` 类型，使用 `unknown` + 类型守卫
+- 所有 Promise 必须有错误处理（`.catch()` 或 `try/catch`）
+- 使用 `satisfies` 运算符代替 `as` 类型断言
+
+## CSS 规范
+
+- CSS 类名：UnoCSS 优先，不写自定义 CSS，除非 UnoCSS 搞不定
+- CSS 变量：使用 `:root` 定义全局变量，使用 `--var()` 引用
 
 ## Architecture
 
@@ -85,6 +98,10 @@ Store 模块（`src/store/modules/`）：
 - `_builtin/` — 内置页面：403/404/500、login、iframe-page
 - `home/` — 首页
 - `system/` — 系统管理：admin（管理员）、role（角色）、menu（菜单）、config（配置）、dict-type（字典）、attachment（附件）、crontab（定时任务）、crud（代码生成）、profile（个人资料）等
+- 新增业务模块：`src/views/{module-name}/`，如 `src/views/condor/`
+- 业务模块页面：`src/views/{module-name}/{page-name}/`，如 `src/views/condor/user/`
+- 业务模块国际化文件：`src/locales/condor/{module-name}/index.ts`，如 `src/locales/condor/condor/user/index.ts`
+- 页面表格/表单配置统一使用src/components/condor/目录下的组件,如 `src/components/condor/table`
 
 ### Layout System
 

@@ -64,17 +64,12 @@ export const useColumns = (columns: any) => {
   };
   // 清除组件属性
   const cleanComponentProps = (props: any) => {
-    const cleanedProps = { ...props };
-    if (cleanedProps?.disabled !== undefined) {
-      Reflect.deleteProperty(cleanedProps, 'disabled');
+    const { disabled: _disabled, readonly: _readonly, type, ...rest } = props || {};
+    // 保留 type 除非是 textarea
+    if (type && type !== 'textarea') {
+      rest.type = type;
     }
-    if (cleanedProps?.readonly !== undefined) {
-      Reflect.deleteProperty(cleanedProps, 'readonly');
-    }
-    if (cleanedProps?.type === 'textarea') {
-      Reflect.deleteProperty(cleanedProps, 'type');
-    }
-    return cleanedProps;
+    return rest;
   };
 
   // 搜索列

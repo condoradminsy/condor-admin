@@ -95,6 +95,9 @@ const isShowSearch = ref(props.showSearch);
 const checkedRowKeys = ref<(string | number)[]>([]);
 const columns = ref<Condor.Table.Columns[]>([]);
 const route = useRoute();
+// 注意: 此 watch 使用浅比较，仅在 columns 数组引用改变时触发
+// 如需动态修改列属性，请替换整个 columns 数组而非修改内部属性
+// 例如: config.value.columns = [...config.value.columns]
 watch(
   () => props.config.columns,
   newVal => {
@@ -106,7 +109,7 @@ watch(
         };
       }) || [];
   },
-  { immediate: true, deep: true }
+  { immediate: true }
 );
 // 搜索列,配置列
 const { searchColumns, configColumns } = useColumns(columns);
