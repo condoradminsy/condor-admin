@@ -33,4 +33,5 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   system_profile: () => import("@/views/system/profile/index.vue"),
   system_role: () => import("@/views/system/role/index.vue"),
   system_test: () => import("@/views/system/test/index.vue"),
+  condorauth_user: () => import("@/modules/condorauth/user/index.vue"),
 };

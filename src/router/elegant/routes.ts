@@ -40,6 +40,26 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'condorauth',
+    path: '/condorauth',
+    component: 'layout.base',
+    meta: {
+      title: 'condorauth',
+      i18nKey: 'route.condorauth'
+    },
+    children: [
+      {
+        name: 'condorauth_user',
+        path: '/condorauth/user',
+        component: 'view.condorauth_user',
+        meta: {
+          title: 'condorauth_user',
+          i18nKey: 'route.condorauth_user'
+        }
+      }
+    ]
+  },
+  {
     name: 'home',
     path: '/home',
     component: 'layout.base$view.home',

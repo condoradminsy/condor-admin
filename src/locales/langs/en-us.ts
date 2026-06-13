@@ -242,7 +242,9 @@ const local: App.I18n.Schema = {
     system_test: 'Crud Test',
     'system_admin-log': 'Admin Log',
     'system_login-log': 'Login Log',
-    system_profile: 'Profile'
+    system_profile: 'Profile',
+    condorauth: 'Auth Management',
+    condorauth_user: 'User Management'
   },
   page: {
     login: {

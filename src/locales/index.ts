@@ -17,6 +17,33 @@ const i18n = createI18n({
  */
 export function setupI18n(app: App) {
   app.use(i18n);
+  loadModuleRouteLabels();
+}
+
+/**
+ * Load route labels from module route.ts files
+ *
+ * Each module can provide a route.ts file at src/modules/{module}/locales/route.ts
+ * that exports route labels in the format:
+ *   { routeKey: { 'zh-CN': string, 'en-US': string } }
+ */
+async function loadModuleRouteLabels() {
+  try {
+    const routeModules = import.meta.glob<{ default: Record<string, { 'zh-CN': string; 'en-US': string }> }>(
+      '../modules/**/locales/route.ts'
+    );
+    const entries = Object.entries(routeModules);
+    if (!entries.length) return;
+    const results = await Promise.allSettled(entries.map(([, loader]) => loader()));
+    results.forEach(result => {
+      if (result.status !== 'fulfilled' || !result.value?.default) return;
+      Object.entries(result.value.default).forEach(([key, labels]) => {
+        Object.entries(labels).forEach(([locale, label]) => {
+          i18n.global.mergeLocaleMessage(locale, { route: { [key]: label } });
+        });
+      });
+    });
+  } catch {}
 }
 
 export const $t = i18n.global.t as App.I18n.$T;
@@ -42,8 +69,17 @@ export async function loadPageLocale(page: string) {
     if (!page) return;
     const str = page.replace(/^\/+|\/+$/g, '');
     if (loaded.has(str)) return;
-    const modules = import.meta.glob<{ default: Record<string, any> }>('./condor/**/index.ts');
-    const loader = modules[`./condor/${str}/index.ts`];
+    const modules = import.meta.glob<{ default: Record<string, any> }>([
+      './condor/**/index.ts',
+      '../modules/**/locales/condor/**/index.ts'
+    ]);
+    // Try src/locales/condor/ first (system pages)
+    let loader = modules[`./condor/${str}/index.ts`];
+    // Try src/modules/.../locales/condor/ (plugin pages)
+    if (!loader) {
+      const topLevelModule = str.split('/')[0];
+      loader = modules[`../modules/${topLevelModule}/locales/condor/${str}/index.ts`];
+    }
     if (!loader) return;
     const condorMessages = await loader();
     if (!condorMessages) return;

@@ -478,7 +478,7 @@ declare namespace App {
           resetSuccessMsg: string;
         };
       };
-      route: Record<I18nRouteKey, string>;
+      route: Partial<Record<I18nRouteKey, string>>;
       page: {
         login: {
           common: {

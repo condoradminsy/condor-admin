@@ -108,6 +108,11 @@
     "vue-eslint-parser": "10.2.0",
     "vue-tsc": "3.1.5"
   },
+  "pnpm": {
+    "overrides": {
+      "@elegant-router/core": "workspace:*"
+    }
+  },
   "simple-git-hooks": {
     "commit-msg": "pnpm sa git-commit-verify",
     "pre-commit": "pnpm typecheck && pnpm lint && git diff --exit-code"

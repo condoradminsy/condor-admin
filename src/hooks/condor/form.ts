@@ -77,7 +77,7 @@ export const useForm = ({ columns, urls, multilingualFields, formRef, formModalR
   // 提交表单
   const submitForm = (type: string) => {
     formRef.value.validate((valid: boolean) => {
-      if (valid) {
+      if (!valid) {
         let data: any = { ...state.form };
         if (typeof onBeforeSubmit === 'function') {
           const newData = onBeforeSubmit(data);

@@ -4,6 +4,7 @@ import type { RouteKey } from '@elegant-router/types';
 
 export function setupElegantRouter() {
   return ElegantVueRouter({
+    pageDir: ['src/views', 'src/modules'],
     layouts: {
       base: 'src/layouts/base-layout/index.vue',
       blank: 'src/layouts/blank-layout/index.vue'

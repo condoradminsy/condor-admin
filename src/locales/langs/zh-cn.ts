@@ -238,7 +238,9 @@ const local: App.I18n.Schema = {
     system_test: 'Crud测试',
     'system_admin-log': '操作日志',
     'system_login-log': '登录日志',
-    system_profile: '个人资料'
+    system_profile: '个人资料',
+    condorauth: '授权管理',
+    condorauth_user: '用户管理'
   },
   page: {
     login: {
