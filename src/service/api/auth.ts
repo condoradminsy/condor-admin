@@ -65,7 +65,7 @@ export function fetchCustomBackendError(code: string, msg: string) {
 }
 
 // 上传文件
-export function fetchUpload(data: FormData) {
+export function fetchUpload(data: FormData, onProgress?: (percent: number) => void) {
   return request({
     url: '/core/attachment/upload',
     method: 'post',
@@ -73,6 +73,11 @@ export function fetchUpload(data: FormData) {
     headers: {
       Accept: '*/*',
       'Content-Type': 'multipart/form-data'
+    },
+    onUploadProgress: e => {
+      if (e.total && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
     }
   });
 }

@@ -1,27 +1,23 @@
-# CLAUDE.md
+# AGENTS.md — CondorAdmin
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Vue 3 + Vite 7 + TypeScript + NaiveUI + Pinia + UnoCSS 中后台，基于 Soybean Admin 二次开发，后端 PHP Webman。
 
-## 技术栈
+## 关键命令
 
-Vue3,Vite7,Pinia,TypeScript,NaiveUI,UnoCSS
-采用 pnpm monorepo 架构
+| 命令 | 说明 |
+|---|---|
+| `pnpm dev` | dev server (port 9527, mode=test) |
+| `pnpm dev:prod` | dev server (mode=prod) |
+| `pnpm build` / `pnpm build:test` | 生产/测试构建 |
+| `pnpm lint` | ESLint 自动修复 |
+| `pnpm typecheck` | vue-tsc 类型检查 |
+| `pnpm gen-route` | 根据 `src/views/` 重新生成路由文件 |
+| `pnpm commit` | 交互式生成 Conventional Commit |
+| `pnpm preview` | 预览构建 (port 9725) |
 
-## Commands
+验证顺序：`pnpm typecheck && pnpm lint`（即 pre-commit hook 的执行顺序）。
 
-```bash
-pnpm dev              # 启动开发服务器 (mode: test, port 9527)
-pnpm dev:prod         # 启动开发服务器 (mode: prod)
-pnpm build            # 生产构建
-pnpm build:test       # 测试环境构建
-pnpm lint             # ESLint 检查和自动修复
-pnpm typecheck        # TypeScript 类型检查
-pnpm gen-route        # 重新生成 Elegant Router 路由文件
-pnpm commit           # 交互式生成 Conventional Commits 提交信息
-pnpm preview          # 预览构建结果 (port 9725)
-```
-
-## Architecture
+## 架构要点
 
 ### pnpm Monorepo
 
@@ -79,6 +75,43 @@ Store 模块（`src/store/modules/`）：
 
 新建页面无需手动配路由，`pnpm gen-route` 自动从 `src/views/` 目录结构生成。
 
+### 模块开发（src/modules/）
+
+`src/modules/` 下每个目录是一个独立业务模块，**以目录存在即启用**。详见 `src/modules/MODULE_CONVENTION.md`。
+
+模块目录结构：
+```
+src/modules/{plugin-name}/
+├── views/                        # Vue 页面（与 src/views/ 结构一致）
+│   └── {page}/index.vue
+├── locales/                      # i18n 翻译文件
+│   ├── route.ts                  # 路由标签自描述
+│   └── condor/{plugin-name}/{page}/
+│       ├── index.ts              # 入口: 导出 { 'zh-CN': zhCn, 'en-US': enUs }
+│       └── langs/
+│           ├── zh-cn.ts          # 中文翻译
+│           └── en-us.ts          # 英文翻译
+└── types/
+    ├── i18n.d.ts                 # Module Augmentation — declare global 自动合并 PageSchema
+    └── i18n/{page}.d.ts          # 翻译键类型接口
+```
+
+关键机制：
+
+- **路由自动发现**：`pnpm gen-route` 同时扫描 `src/views/` 和 `src/modules/*/views/`，自动生成路由定义、组件导入和映射表。无需手动编辑 `src/router/elegant/routes.ts`。
+- **Module Augmentation**：模块的 `types/i18n.d.ts` 通过 `declare global { namespace App.I18n { interface PageSchema { ... } } }` 自动合并到全局类型，无需手动修改 `src/typings/condor/i18n/index.d.ts`。
+- **Locale 动态加载**：模块 locale 文件位于 `locales/condor/{plugin-name}/{page}/index.ts`，`loadPageLocale()` 通过 `import.meta.glob` 根据当前路由 path 自动加载。
+
+开发步骤参考：
+1. `src/modules/_template/` — copy 为 `src/modules/{your-module}/`，替换 `{plugin}`、`{page}` 占位符
+2. 实现页面 `views/{page}/index.vue`
+3. 配置 `types/i18n/{page}.d.ts` 翻译键类型 + `types/i18n.d.ts` PageSchema 注册
+4. 编写 `locales/` 下中英文翻译文件 + `locales/route.ts` 路由标签
+5. 运行 `pnpm gen-route` 生成路由
+6. 运行 `pnpm typecheck && pnpm lint` 验证
+
+**禁止跨模块 import**。模块之间不得直接依赖，共享逻辑提取到 `packages/` 或 `src/shared/`。
+
 ### 后端 API 路径规则
 
 后端 PHP Webman，API 路径格式：`/core/{模块前缀}/{模块名}/{方法}`
@@ -107,7 +140,7 @@ urls: {
 - **字典选择器**：`component: { name: 'condor-dict-radio', props: { code: 'dict_key' } }`
 - **时间列**：`render: 'datetime'`
 - **关联选择器**：`component: { name: 'condor-select', props: { url: 'core/xxx/selectpage' } }`
-- **树形选择器**：`component: { name: 'condor-tree-select', props: { url: 'core/role/selectpage', checkable: true, multiple: true } }`
+- **树形选择器**：`component: { name: 'condor-tree-select', props: { url: 'core/xxx/selectpage', checkable: true, multiple: true } }`
 - **富文本编辑器**：`component: { name: 'condor-editor' }`
 - **图片列**：`render: 'image'` 或 `component: { name: 'condor-upload', props: { type: 'image' } }`
 - **操作列**：`type: 'operate'`, `buttons: ['edit', 'del']`
@@ -130,23 +163,12 @@ urls: {
 - 页面级 locale 通过 `loadPageLocale()` 使用 import.meta.glob 动态加载 ./condor/**/index.ts，页面路由 path 作为路径映射建国际化文件
 - I18nKey 由 GetI18nKey<Schema> 递归生成，需要在 Schema 中按模块添加类型定义。
 
-### 路径别名
+### 项目特有约定
 
-- `@/` → `src/`
-- `~/` → 项目根目录
-
-### Git Hooks
-
-`simple-git-hooks`：pre-commit 执行 `typecheck && lint`，commit-msg 验证 Conventional Commits 格式。
-
-## TypeScript 规范
-
-- 优先使用 `interface` 而不是 `type`（除非需要联合类型）
-- 不允许 `any` 类型，使用 `unknown` + 类型守卫
-- 所有 Promise 必须有错误处理（`.catch()` 或 `try/catch`）
-- 使用 `satisfies` 运算符代替 `as` 类型断言
-
-## CSS 规范
-
-- CSS 类名：UnoCSS 优先，不写自定义 CSS，除非 UnoCSS 搞不定
-- CSS 变量：使用 `:root` 定义全局变量，使用 `--var()` 引用
+- 代码规范：PSR-12（PHP）、interface > type（TS）、无 `any`、用 `satisfies` 代替 `as`
+- CSS：UnoCSS 优先，不写自定义 CSS
+- `@/` → `src/`, `~/` → 项目根目录
+- `npmrc` 配置了 `shamefully-hoist=true`（依赖扁平化）+ NPMMirror 镜像
+- API 代理：`/proxy-default` 前缀，通过 `.env` 中 `VITE_HTTP_PROXY=Y` 启用
+- `condor` 前缀层（组件、hooks、locales）是项目的业务定制层，非上游 Soybean 代码
+- 登录密码使用 RSA 加密（JSEncrypt），后端返回公钥

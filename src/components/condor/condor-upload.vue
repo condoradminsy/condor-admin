@@ -67,10 +67,12 @@ watch(
 const emit = defineEmits<{
   (e: 'update:value', value: string | string[] | null | undefined): void;
 }>();
-const customRequest = ({ file, onFinish, onError }: UploadCustomRequestOptions) => {
+const customRequest = ({ file, onFinish, onProgress, onError }: UploadCustomRequestOptions) => {
   const formData = new FormData();
   formData.append('file', file.file as File);
-  fetchUpload(formData)
+  fetchUpload(formData, percent => {
+    onProgress({ percent });
+  })
     .then(({ error, data }) => {
       if (error) {
         onError();

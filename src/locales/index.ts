@@ -5,7 +5,7 @@ import messages from './locale';
 
 const i18n = createI18n({
   locale: localStg.get('lang') || 'zh-CN',
-  fallbackLocale: 'en',
+  fallbackLocale: 'en-US',
   messages,
   legacy: false
 });
@@ -15,9 +15,9 @@ const i18n = createI18n({
  *
  * @param app
  */
-export function setupI18n(app: App) {
+export async function setupI18n(app: App) {
   app.use(i18n);
-  loadModuleRouteLabels();
+  await loadModuleRouteLabels();
 }
 
 /**
@@ -29,9 +29,10 @@ export function setupI18n(app: App) {
  */
 async function loadModuleRouteLabels() {
   try {
-    const routeModules = import.meta.glob<{ default: Record<string, { 'zh-CN': string; 'en-US': string }> }>(
-      '../modules/**/locales/route.ts'
-    );
+    const routeModules = import.meta.glob<{ default: Record<string, { 'zh-CN': string; 'en-US': string }> }>([
+      '../modules/**/locales/route.ts',
+      '!../modules/_template/**'
+    ]);
     const entries = Object.entries(routeModules);
     if (!entries.length) return;
     const results = await Promise.allSettled(entries.map(([, loader]) => loader()));
